@@ -56,7 +56,9 @@ externalDependency = [
     'espressoSchema': 'com.linkedin.espresso:espresso-schema-impl:0.8.1602',
     'espressoCommonImpl': 'com.linkedin.espresso:espresso-common-impl:0.8.1602',
     'espressoStoreImpl': 'com.linkedin.espresso:espresso-store-impl:0.8.1602',
-    'helixCore': 'org.apache.helix:helix-core:0.6.1.3'
+    'helixCore': 'org.apache.helix:helix-core:0.6.1.3',
+    'hadoop': 'org.apache.hadoop:hadoop-core:1.0.3',
+    'hbase': 'org.apache.hbase:hbase:0.94.14'
 ];
 
 if (System.getProperty('open_source') != null) {
