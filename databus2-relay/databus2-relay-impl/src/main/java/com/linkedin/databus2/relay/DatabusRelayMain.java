@@ -50,17 +50,13 @@ import com.linkedin.databus2.producers.EventProducer;
 import com.linkedin.databus2.producers.EventProducerServiceProvider;
 import com.linkedin.databus2.producers.RelayEventProducer;
 import com.linkedin.databus2.producers.RelayEventProducersRegistry;
+import com.linkedin.databus2.producers.db.HbaseEventFactory;
+import com.linkedin.databus2.producers.db.HbaseEventProducer;
 import com.linkedin.databus2.producers.db.OracleEventProducer;
 import com.linkedin.databus2.relay.config.PhysicalSourceStaticConfig;
 import com.linkedin.databus2.relay.config.ReplicationBitSetterStaticConfig.SourceType;
 import com.linkedin.databus2.schemas.SchemaRegistryService;
 
-/**
- * Main class for a Databus Relay.
- *
- * @author Jemiah Westerman<jwesterman@linkedin.com>
- * @version $Revision: 261967 $
- */
 public class DatabusRelayMain extends HttpRelay {
 	public static final Logger LOG = Logger.getLogger(DatabusRelayMain.class
 			.getName());
@@ -70,7 +66,7 @@ public class DatabusRelayMain extends HttpRelay {
     private final RelayEventProducersRegistry _producersRegistry = RelayEventProducersRegistry.getInstance();
 	MultiServerSequenceNumberHandler _maxScnReaderWriters;
 	protected Map<PhysicalPartition, EventProducer> _producers;
-	Map<PhysicalPartition, MonitoringEventProducer> _monitoringProducers;
+	Map<PhysicalPartition,EventProducer> _monitoringProducers;
 	ControlSourceEventsRequestProcessor _csEventRequestProcessor;
 	private boolean _dbPullerStart = false;
 
@@ -95,7 +91,7 @@ public class DatabusRelayMain extends HttpRelay {
 				handlerFactory);
 		_producers = new HashMap<PhysicalPartition, EventProducer>(
 				_pConfigs.size());
-		_monitoringProducers = new HashMap<PhysicalPartition, MonitoringEventProducer>(_pConfigs.size());
+		_monitoringProducers = new HashMap<PhysicalPartition, EventProducer>(_pConfigs.size());
 		_dbPullerStart = false;
 	}
 
@@ -111,9 +107,7 @@ public class DatabusRelayMain extends HttpRelay {
 	@Override
 	public void removeOneProducer(PhysicalSourceStaticConfig pConfig) {
 		PhysicalPartition pPartition = pConfig.getPhysicalPartition();
-
 		List<EventProducer> plist = new ArrayList<EventProducer>();
-
 		if (_producers != null && _producers.containsKey(pPartition))
 			plist.add(_producers.remove(pPartition));
 
@@ -170,7 +164,15 @@ public class DatabusRelayMain extends HttpRelay {
       throw new DatabusException("Uri is required to start the relay");
     uri = uri.trim();
 		EventProducer producer = null;
-		if (uri.startsWith("jdbc:")) {
+		if (uri.startsWith("hbase:")) {
+			LOG.info("Got a uri start with hbase...");
+			producer = new HbaseEventProducerFactory().buildEventProducer(
+					pConfig, schemaRegistryService, dbusEventBuffer,
+					getMbeanServer(), _inBoundStatsCollectors
+							.getStatsCollector(statsCollectorName),
+					maxScnReaderWriters);
+		}
+		else if (uri.startsWith("jdbc:")) {
 		  SourceType sourceType = pConfig.getReplBitSetter().getSourceType();
           if (SourceType.TOKEN.equals(sourceType))
             throw new DatabusException("Token Source-type for Replication bit setter config cannot be set for trigger-based Databus relay !!");
@@ -225,6 +227,14 @@ public class DatabusRelayMain extends HttpRelay {
 					"dbMonitor." + pPartition.toSimpleString(),
 					pConfig.getName(), pConfig.getUri(),
 					((OracleEventProducer) producer).getMonitoredSourceInfos(),
+					getMbeanServer());
+			_monitoringProducers.put(pPartition, monitoringProducer);
+			plist.add(monitoringProducer);
+		} else if (producer instanceof HbaseEventProducer) {
+			HbaseMonitoringEventProducer monitoringProducer = new HbaseMonitoringEventProducer(
+					"dbMonitor." + pPartition.toSimpleString(),
+					pConfig.getName(), pConfig.getUri(),
+					((HbaseEventProducer)producer).getMonitoredSourceInfos(),
 					getMbeanServer());
 			_monitoringProducers.put(pPartition, monitoringProducer);
 			plist.add(monitoringProducer);
@@ -362,7 +372,7 @@ public class DatabusRelayMain extends HttpRelay {
 				LOG.info("EventProducer is shutdown!");
 			}
 
-			MonitoringEventProducer monitoringProducer = _monitoringProducers
+			HbaseMonitoringEventProducer monitoringProducer = (HbaseMonitoringEventProducer)_monitoringProducers
 					.get(pPartition);
 			if (monitoringProducer != null) {
 				if (monitoringProducer.isRunning()) {

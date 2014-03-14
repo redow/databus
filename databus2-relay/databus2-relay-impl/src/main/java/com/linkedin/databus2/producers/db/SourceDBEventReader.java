@@ -31,5 +31,5 @@ public interface SourceDBEventReader {
 			long sinceSCN) throws DatabusException, EventCreationException,
 			UnsupportedKeyException;
 
-	List<OracleTriggerMonitoredSourceInfo> getSources();
+	List<? extends EventSourceStatisticsIface> getSources();
 }

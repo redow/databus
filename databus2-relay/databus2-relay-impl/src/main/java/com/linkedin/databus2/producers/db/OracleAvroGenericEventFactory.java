@@ -44,6 +44,7 @@ import org.apache.avro.generic.GenericDatumWriter;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.io.BinaryEncoder;
 import org.apache.avro.io.Encoder;
+import org.apache.hadoop.hbase.KeyValue;
 import org.apache.log4j.Logger;
 
 import com.linkedin.databus.core.DbusEventBufferAppendable;
@@ -790,4 +791,18 @@ implements EventFactory
       throw new EventCreationException("SQLException reading CLOB value for field " + fieldName, ex);
     }
   }
+  
+  public long createAndAppendEvent(long scn,
+          long timestamp,
+          KeyValue row,
+          DbusEventBufferAppendable eventBuffer,
+          boolean enableTracing,
+	      DbusEventsStatisticsCollector dbusEventsStatisticsCollector)
+	throws EventCreationException, UnsupportedKeyException
+	{
+	  //TODO should throw NotSupportExcpetion
+	  return 1;
+	}
+  
+  
 }

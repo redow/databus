@@ -20,6 +20,8 @@ dependencies {
   compile externalDependency.log4j
   compile externalDependency.netty
   compile externalDependency.json
+  compile externalDependency.hadoop
+  compile externalDependency.hbase
 
   runtime externalDependency.ojdbc6
 

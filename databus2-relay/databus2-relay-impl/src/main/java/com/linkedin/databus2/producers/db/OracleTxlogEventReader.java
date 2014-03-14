@@ -832,7 +832,7 @@ public class OracleTxlogEventReader
   }
 
   @Override
-  public List<OracleTriggerMonitoredSourceInfo> getSources() {
+  public List<? extends EventSourceStatisticsIface> getSources() {
 	  return _sources;
   }
 

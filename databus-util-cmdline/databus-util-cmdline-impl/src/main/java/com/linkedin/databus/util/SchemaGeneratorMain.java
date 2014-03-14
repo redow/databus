@@ -66,68 +66,72 @@ private String _primaryKey;
   public static void main(String[] args)
   throws Exception
   {
-    CommandLineHelper commandLineParser = new CommandLineHelper();
-    commandLineParser.addArgument("database", false, "Database JDBC connection string (e.g. jdbc:oracle:thin:@devdb:1521:db).", CommandLineHelper.ArgumentType.STRING);
-    commandLineParser.addArgument("userName", false, "User name used to connect to the database.", CommandLineHelper.ArgumentType.STRING);
-    commandLineParser.addArgument("password", false, "Password used to connect to the database.", CommandLineHelper.ArgumentType.STRING);
-    commandLineParser.addArgument("viewName", true, "Name of the databus view for which to generate a schema..", CommandLineHelper.ArgumentType.STRING);
-    commandLineParser.addArgument("recordName", true, "Record name for the generated schema (will be the Java class name of the compiled schema).", CommandLineHelper.ArgumentType.STRING);
-    commandLineParser.addArgument("namespace", true, "Namespace for the generated schema (will be the Java package of the compiled schema).", CommandLineHelper.ArgumentType.STRING);
-    commandLineParser.addArgument("javaOutDir", false, "Directory for generated Java source files (if absent, the files will not be generated).", CommandLineHelper.ArgumentType.DIRECTORY);
-    commandLineParser.addArgument("avroOutDir", false, "Directory for generated .avsc files (if absent, the files will not be generated).", CommandLineHelper.ArgumentType.DIRECTORY);
-    commandLineParser.addArgument("avroOutVersion", false, "Schema version for the avro output file (required if avroOutDir is specified).", CommandLineHelper.ArgumentType.INTEGER);
-    commandLineParser.addArgument("primaryKey", false, "Primary key name).",CommandLineHelper.ArgumentType.STRING);
-
-    commandLineParser.addArgument("verbose", false, "true to enable verbose output.", CommandLineHelper.ArgumentType.BOOLEAN);
-    commandLineParser.addArgument("driver", false, "JDBC driver (if absent, defaults to oracle.jdbc.driver.OracleDriver).", CommandLineHelper.ArgumentType.STRING);
-
-    Map<String, Object> parsedArgs = commandLineParser.parseCommandLine(args);
-    if(parsedArgs == null)
-    {
-      return;
-    }
-
-    if(parsedArgs.containsKey("avroOutDir") && !parsedArgs.containsKey("avroOutVersion"))
-    {
-      commandLineParser.showUsage("Bad command line. avroOutDir requires avroOutVersion to be specified as well.");
-      return;
-    }
-
-    String database = null != parsedArgs.get("database") ? (String)parsedArgs.get("database")
-                                                         : DEFAULT_DATABASE;
-    String username = null != parsedArgs.get("userName") ? (String)parsedArgs.get("userName")
-                                                         : DEFAULT_USERNAME;
-    String password = null != (String)parsedArgs.get("password") ? (String)(String)parsedArgs.get("password")
-                                                         : DEFAULT_PASSWORD;
-    
-    String primaryKey = null != (String) parsedArgs.get("primaryKey") ? (String) parsedArgs.get("primaryKey") : "";
-
-    // Show the arguments we read from the command line (helpful when running in an IDE, where you
-    // don't always see the command line)
-    commandLineParser.showParsedArguments("Processed command line arguments:", parsedArgs);
-
-    // Create the new SchemaGeneratorMain instance using the command line args
-    SchemaGeneratorMain generator = new SchemaGeneratorMain(
-          database,
-          username,
-          password,
-          (String)parsedArgs.get("viewName"),
-          (String)parsedArgs.get("recordName"),
-          (String)parsedArgs.get("namespace"),
-          (File)parsedArgs.get("javaOutDir"),
-          (File)parsedArgs.get("avroOutDir"),
-          (Boolean)parsedArgs.get("verbose"),
-          (String)parsedArgs.get("driver"),
-          (Integer)parsedArgs.get("avroOutVersion"),
-          primaryKey);
-
-    // Load JDBC drivers
-    generator.loadJdbcDrivers();
-
-    // Generate the schema
-    generator.generateSchema();
-
-    System.out.println("Done.");
+	  //TODO modified by redow to generate java according to my manual  
+	  File avroOutFile = new File("/home/databus/databus/build/databus2-example-relay-pkg/distributions/databus2-example-relay-pkg/schemas_registry/com.linkedin.events.example.hbase.Hbase.1.avsc");
+	  File javaOutDir = new File("/home/databus");
+	  SpecificCompiler.compileSchema(avroOutFile, javaOutDir);
+//    CommandLineHelper commandLineParser = new CommandLineHelper();
+//    commandLineParser.addArgument("database", false, "Database JDBC connection string (e.g. jdbc:oracle:thin:@devdb:1521:db).", CommandLineHelper.ArgumentType.STRING);
+//    commandLineParser.addArgument("userName", false, "User name used to connect to the database.", CommandLineHelper.ArgumentType.STRING);
+//    commandLineParser.addArgument("password", false, "Password used to connect to the database.", CommandLineHelper.ArgumentType.STRING);
+//    commandLineParser.addArgument("viewName", true, "Name of the databus view for which to generate a schema..", CommandLineHelper.ArgumentType.STRING);
+//    commandLineParser.addArgument("recordName", true, "Record name for the generated schema (will be the Java class name of the compiled schema).", CommandLineHelper.ArgumentType.STRING);
+//    commandLineParser.addArgument("namespace", true, "Namespace for the generated schema (will be the Java package of the compiled schema).", CommandLineHelper.ArgumentType.STRING);
+//    commandLineParser.addArgument("javaOutDir", false, "Directory for generated Java source files (if absent, the files will not be generated).", CommandLineHelper.ArgumentType.DIRECTORY);
+//    commandLineParser.addArgument("avroOutDir", false, "Directory for generated .avsc files (if absent, the files will not be generated).", CommandLineHelper.ArgumentType.DIRECTORY);
+//    commandLineParser.addArgument("avroOutVersion", false, "Schema version for the avro output file (required if avroOutDir is specified).", CommandLineHelper.ArgumentType.INTEGER);
+//    commandLineParser.addArgument("primaryKey", false, "Primary key name).",CommandLineHelper.ArgumentType.STRING);
+//
+//    commandLineParser.addArgument("verbose", false, "true to enable verbose output.", CommandLineHelper.ArgumentType.BOOLEAN);
+//    commandLineParser.addArgument("driver", false, "JDBC driver (if absent, defaults to oracle.jdbc.driver.OracleDriver).", CommandLineHelper.ArgumentType.STRING);
+//
+//    Map<String, Object> parsedArgs = commandLineParser.parseCommandLine(args);
+//    if(parsedArgs == null)
+//    {
+//      return;
+//    }
+//
+//    if(parsedArgs.containsKey("avroOutDir") && !parsedArgs.containsKey("avroOutVersion"))
+//    {
+//      commandLineParser.showUsage("Bad command line. avroOutDir requires avroOutVersion to be specified as well.");
+//      return;
+//    }
+//
+//    String database = null != parsedArgs.get("database") ? (String)parsedArgs.get("database")
+//                                                         : DEFAULT_DATABASE;
+//    String username = null != parsedArgs.get("userName") ? (String)parsedArgs.get("userName")
+//                                                         : DEFAULT_USERNAME;
+//    String password = null != (String)parsedArgs.get("password") ? (String)(String)parsedArgs.get("password")
+//                                                         : DEFAULT_PASSWORD;
+//    
+//    String primaryKey = null != (String) parsedArgs.get("primaryKey") ? (String) parsedArgs.get("primaryKey") : "";
+//
+//    // Show the arguments we read from the command line (helpful when running in an IDE, where you
+//    // don't always see the command line)
+//    commandLineParser.showParsedArguments("Processed command line arguments:", parsedArgs);
+//
+//    // Create the new SchemaGeneratorMain instance using the command line args
+//    SchemaGeneratorMain generator = new SchemaGeneratorMain(
+//          database,
+//          username,
+//          password,
+//          (String)parsedArgs.get("viewName"),
+//          (String)parsedArgs.get("recordName"),
+//          (String)parsedArgs.get("namespace"),
+//          (File)parsedArgs.get("javaOutDir"),
+//          (File)parsedArgs.get("avroOutDir"),
+//          (Boolean)parsedArgs.get("verbose"),
+//          (String)parsedArgs.get("driver"),
+//          (Integer)parsedArgs.get("avroOutVersion"),
+//          primaryKey);
+//
+//    // Load JDBC drivers
+//    generator.loadJdbcDrivers();
+//
+//    // Generate the schema
+//    generator.generateSchema();
+//
+//    System.out.println("Done.");
   }
 
   public SchemaGeneratorMain(String database,

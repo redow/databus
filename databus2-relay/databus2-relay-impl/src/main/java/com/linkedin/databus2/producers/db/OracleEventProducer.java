@@ -109,8 +109,9 @@ public class OracleEventProducer extends AbstractEventProducer
 	  return _sourceDBEventReader.getSources();
   }
 
+  @SuppressWarnings("unchecked")
   public List<OracleTriggerMonitoredSourceInfo> getMonitoredSourceInfos() {
-    return _sourceDBEventReader.getSources();
+    return (List<OracleTriggerMonitoredSourceInfo>)_sourceDBEventReader.getSources();
   }
 
   @Override

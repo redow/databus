@@ -29,6 +29,8 @@ import com.linkedin.databus.core.UnsupportedKeyException;
 import com.linkedin.databus.core.monitoring.mbean.DbusEventsStatisticsCollector;
 import com.linkedin.databus2.producers.EventCreationException;
 
+import org.apache.hadoop.hbase.KeyValue;
+
 /**
  * Factory interface for event creation factory classes.
  */
@@ -79,4 +81,20 @@ public interface EventFactory
                                    boolean enableTracing,
                                    DbusEventsStatisticsCollector dbusEventsStatisticsCollector)
   throws EventCreationException, UnsupportedKeyException;
+  
+  /**
+   *  Create an event from hbase KeyValue
+   * 
+   * 
+   * 
+   * 
+   * 
+   */
+  public long createAndAppendEvent(long scn,
+          long timestamp,
+          KeyValue row,
+          DbusEventBufferAppendable eventBuffer,
+          boolean enableTracing,
+          DbusEventsStatisticsCollector dbusEventsStatisticsCollector)
+          throws EventCreationException, UnsupportedKeyException;
 }
