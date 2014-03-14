@@ -23,7 +23,7 @@ import com.linkedin.databus.client.DatabusHttpClientImpl;
 
 public class PersonClientMain
 {
-  static final String PERSON_SOURCE = "com.linkedin.events.example.person.Person";
+  static final String PERSON_SOURCE = "com.linkedin.events.example.hbase.Hbase";
 
   public static void main(String[] args) throws Exception
   {

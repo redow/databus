@@ -21,12 +21,19 @@ package com.linkedin.databus.client.example;
 
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.util.Utf8;
+import org.apache.commons.logging.Log;
+import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
+
+import sun.awt.image.BytePackedRaster;
 
 import com.linkedin.databus.client.consumer.AbstractDatabusCombinedConsumer;
 import com.linkedin.databus.client.pub.ConsumerCallbackResult;
 import com.linkedin.databus.client.pub.DbusEventDecoder;
 import com.linkedin.databus.core.DbusEvent;
+import org.apache.hadoop.hbase.util.Bytes;
+
+
 
 public class PersonConsumer extends AbstractDatabusCombinedConsumer
 {
@@ -51,15 +58,19 @@ public class PersonConsumer extends AbstractDatabusCombinedConsumer
   {
     GenericRecord decodedEvent = eventDecoder.getGenericRecord(event, null);
     try {
-      Utf8 firstName = (Utf8)decodedEvent.get("firstName");
-      Utf8 lastName = (Utf8)decodedEvent.get("lastName");
-      Long birthDate = (Long)decodedEvent.get("birthDate");
-      Utf8 deleted = (Utf8)decodedEvent.get("deleted");
+//      Utf8 firstName = (Utf8)decodedEvent.get("firstName");
+//      Utf8 lastName = (Utf8)decodedEvent.get("lastName");
+//      Long birthDate = (Long)decodedEvent.get("birthDate");
+//      Utf8 deleted = (Utf8)decodedEvent.get("deleted");
 
-      LOG.info("firstName: " + firstName.toString() +
-               ", lastName: " + lastName.toString() +
-               ", birthDate: " + birthDate +
-               ", deleted: " + deleted.toString());
+//      LOG.info("firstName: " + firstName.toString() +
+//               ", lastName: " + lastName.toString() +
+//               ", birthDate: " + birthDate +
+//               ", deleted: " + deleted.toString());
+    	
+    	byte[] key = (byte[])decodedEvent.get("key");
+    	byte[] value = (byte[])decodedEvent.get("value");
+    	LOG.info("Key: " + Bytes.toString(key) + ".Value: " + Bytes.toString(value));
     } catch (Exception e) {
       LOG.error("error decoding event ", e);
       return ConsumerCallbackResult.ERROR;
