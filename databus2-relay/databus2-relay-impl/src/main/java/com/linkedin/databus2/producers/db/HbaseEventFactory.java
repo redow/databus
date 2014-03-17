@@ -222,7 +222,8 @@ implements EventFactory
     byte[] serializedValue = serializeEvent(record, scn, timestamp, row, eventBuffer, enableTracing,
                                             dbusEventsStatisticsCollector);
     // Append the event to the databus event buffer
-    DbusEventKey eventKey = new DbusEventKey(record.get(keyColumnName));
+    ByteBuffer bb = (ByteBuffer) record.get(keyColumnName);
+    DbusEventKey eventKey = new DbusEventKey(bb.array() );
     short lPartitionId = _partitionFunction.getPartition(eventKey);
     eventBuffer.appendEvent(eventKey, _pSourceId, lPartitionId, timestamp * 1000000, _sourceId,
                             _schemaId, serializedValue, enableTracing, isReplicated, dbusEventsStatisticsCollector);

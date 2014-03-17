@@ -4,9 +4,9 @@ updateOnNext true
 head 0
 maxElements 640000
 tail 16
-lastScnWritten 1394785103348
+lastScnWritten 1394784820089
 scnBufferSize 10240000
-updatedOnCurrentWindow false
+updatedOnCurrentWindow true
 lastWrittenPosition 0
 version 1
 blockSize 1600

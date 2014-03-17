@@ -19,6 +19,8 @@ package com.linkedin.databus.client.example;
 */
 
 
+import java.nio.ByteBuffer;
+
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.util.Utf8;
 import org.apache.commons.logging.Log;
@@ -31,6 +33,7 @@ import com.linkedin.databus.client.consumer.AbstractDatabusCombinedConsumer;
 import com.linkedin.databus.client.pub.ConsumerCallbackResult;
 import com.linkedin.databus.client.pub.DbusEventDecoder;
 import com.linkedin.databus.core.DbusEvent;
+
 import org.apache.hadoop.hbase.util.Bytes;
 
 
@@ -68,9 +71,9 @@ public class PersonConsumer extends AbstractDatabusCombinedConsumer
 //               ", birthDate: " + birthDate +
 //               ", deleted: " + deleted.toString());
     	
-    	byte[] key = (byte[])decodedEvent.get("key");
-    	byte[] value = (byte[])decodedEvent.get("value");
-    	LOG.info("Key: " + Bytes.toString(key) + ".Value: " + Bytes.toString(value));
+    	ByteBuffer bbk = (ByteBuffer)decodedEvent.get("key");
+    	ByteBuffer bbv = (ByteBuffer)decodedEvent.get("value");
+    	LOG.info("Key: " + Bytes.toString(bbk.array()) + ".Value: " + Bytes.toString(bbv.array()));
     } catch (Exception e) {
       LOG.error("error decoding event ", e);
       return ConsumerCallbackResult.ERROR;
