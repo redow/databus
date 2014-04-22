@@ -63,7 +63,7 @@ public class PersonRelayServer extends DatabusRelayMain {
   public static void main(String[] args) throws Exception
   {
   		Cli cli = new Cli();
-	     cli.setDefaultPhysicalSrcConfigFiles("/home/databus/databus/build/databus2-example-relay-pkg/distributions/databus2-example-relay-pkg/conf/sources-hbase.json");
+	     cli.setDefaultPhysicalSrcConfigFiles("conf/sources-hbase.json");
 	     cli.processCommandLineArgs(args);
 	     cli.parseRelayConfig();
 	     // Process the startup properties and load configuration

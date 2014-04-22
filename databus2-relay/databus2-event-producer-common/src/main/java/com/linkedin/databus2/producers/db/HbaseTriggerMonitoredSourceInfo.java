@@ -1,4 +1,8 @@
 package com.linkedin.databus2.producers.db;
+import java.util.ArrayList;
+
+
+import com.kenai.jffi.Array;
 /*
  *
  * Copyright 2013 LinkedIn Corp. All rights reserved
@@ -30,6 +34,7 @@ public class HbaseTriggerMonitoredSourceInfo implements EventSourceStatisticsIfa
   private final String _eventSchema = "";
   private final EventSourceStatistics _statisticsBean;
   private final boolean _skipInfinityScn;
+  private final ArrayList<String> _columnFamily;
   public String getZkQuorum() 
   {
 	  return _hbaseZkQuorum;
@@ -58,13 +63,17 @@ public class HbaseTriggerMonitoredSourceInfo implements EventSourceStatisticsIfa
   {
     return _eventSchema;
   }
+  public ArrayList<String> getColumnFamily()
+  {
+	  return _columnFamily;
+  }
   @Override
   public EventSourceStatistics getStatisticsBean()
   {
     return _statisticsBean;
   }
   public HbaseTriggerMonitoredSourceInfo(short sourceId, String sourceName, String eventTable,
-		  String hbaseZkquorum,String hbaseZkPort,EventFactory factory, EventSourceStatistics statisticsBean,
+		  String hbaseZkquorum,String hbaseZkPort,ArrayList<String> columnFamily,EventFactory factory, EventSourceStatistics statisticsBean,
           boolean skipInfinityScn)
   {
 	  	_hbaseZkPort = hbaseZkPort;
@@ -74,6 +83,7 @@ public class HbaseTriggerMonitoredSourceInfo implements EventSourceStatisticsIfa
 	    _factory = factory;
 	    _sourceName = sourceName;
 	    _skipInfinityScn = skipInfinityScn;
+	    _columnFamily = columnFamily;
 	    if(statisticsBean == null)
 	    {
 	      statisticsBean = new EventSourceStatistics(sourceName);

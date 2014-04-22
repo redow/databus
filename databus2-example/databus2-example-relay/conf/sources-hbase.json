@@ -1,0 +1,14 @@
+{
+    "name" : "hbase",
+    "id"  : 1,
+    "uri" : "hbase:172.21.1.208:2181/testtable1/cf1,cf2",
+	"slowSourceQueryThreshold" : 2000,
+	"sources" :
+	[
+		{"id" : 101, 
+		 "name" : "com.linkedin.events.example.hbase.Hbase",
+		 "uri": "hbase:172.21.1.208:2181/testtable1/cf1,cf2", 
+		 "partitionFunction" : "constant:1"
+		}
+	]
+}

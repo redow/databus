@@ -123,7 +123,7 @@ public class HbaseEventProducerFactory
 
     _log.info("Loading schema for source id " + sourceConfig.getId() + ": " + schema);
 
-    //   -->hbase:172.20.1.1:9000/table
+    //   -->hbase:172.20.1.1:9000/table/cf1,cf2,cf3,cf4
     
     String uri = sourceConfig.getUri();
     _log.info("Got Hbase Uri:" + uri);
@@ -131,13 +131,20 @@ public class HbaseEventProducerFactory
     String eventTable = null;
     String hbaseZkquorum = null;
     String hbaseZkPort = null;
-    
+    ArrayList<String> columnFamily = new ArrayList<String>();
     int idxColon = uri.indexOf(':');
-    int idxSlash = uri.indexOf('/');
+    int idxSlashFirst = uri.indexOf('/');
+    int idxSlashLast = uri.lastIndexOf('/');
     
-    eventTable = uri.substring(idxSlash + 1);
+    eventTable = uri.substring(idxSlashFirst + 1,idxSlashLast);
+    String colunmnFamilyList = uri.substring(idxSlashLast + 1);
+    String[] colunmnFamilyArray = colunmnFamilyList.split(",");
+    for (String sz : colunmnFamilyArray) {
+    	columnFamily.add(sz);
+    }
     hbaseZkquorum = uri.substring(0, idxColon);
-    hbaseZkPort = uri.substring(idxColon + 1,idxSlash);
+    hbaseZkPort = uri.substring(idxColon + 1,idxSlashFirst);
+    
 
     PartitionFunction partitionFunction = buildPartitionFunction(sourceConfig);
     EventFactory factory = createEventFactory( sourceConfig, pConfig,
@@ -152,7 +159,7 @@ public class HbaseEventProducerFactory
 
     HbaseTriggerMonitoredSourceInfo sourceInfo = new HbaseTriggerMonitoredSourceInfo(sourceConfig.getId(),
                                                              sourceConfig.getName(),eventTable,
-                                                             hbaseZkquorum, hbaseZkPort ,factory,
+                                                             hbaseZkquorum, hbaseZkPort ,columnFamily,factory,
                                                              statisticsBean,
                                                              sourceConfig.isSkipInfinityScn());
     return sourceInfo;

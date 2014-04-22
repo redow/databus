@@ -24,6 +24,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.NavigableMap;
+
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.client.Get;
@@ -191,6 +193,8 @@ public class HbaseLogEventReader
 	  String hbaseZkQuorum = source.getZkQuorum();
 	  String hbaseZkPort = source.getZkPort();
 	  String hbaseTable = source.getEventTable();
+	  ArrayList<String> hbaseTableCFList = source.getColumnFamily();
+	  
 	  org.apache.hadoop.conf.Configuration conf = HBaseConfiguration.create();
 	  conf.set("hbase.zookeeper.quorum", hbaseZkQuorum);
 	  conf.set("hbase.zookeeper.property.clientPort", hbaseZkPort);
@@ -202,19 +206,37 @@ public class HbaseLogEventReader
 		  
 		htable = new HTable(conf, hbaseTable + "_scn");
 		scan = new Scan();
-		scan.addFamily(Bytes.toBytes("index"));
+		if (hbaseTableCFList.isEmpty()) {
+			scan.addFamily(Bytes.toBytes("index"));
+		} else {
+			for (String sz : hbaseTableCFList) {
+				scan.addColumn(Bytes.toBytes("index"),Bytes.toBytes(sz + "_R"));
+				scan.addColumn(Bytes.toBytes("index"),Bytes.toBytes(sz + "_C"));
+			}
+		} 
 		scan.setStartRow(Bytes.toBytes(sinceSCN + 1)); //TODO add one to get the kv a little bigger
 		scan.setStopRow(Bytes.toBytes(_MAXSCN));
 		scanner = htable.getScanner(scan);
 
 		List<Get> getList = new ArrayList<Get>();
-		for (Result rs:scanner) { //ts -> index:rowkey,columnFamily,column
+		for (Result rs:scanner) {
 			long timeStamp = Bytes.toLong(rs.getRow());
 			tsWindowEnd = Math.max(timeStamp, tsWindowEnd);
 			tsWindowStart = Math.min(timeStamp, tsWindowStart);
-			byte[] rowKey = rs.getValue(Bytes.toBytes("index"), Bytes.toBytes(""));
-			byte[] columnFamily = rs.getValue(Bytes.toBytes("index"), Bytes.toBytes("ColumnFamily"));
-			byte[] column = rs.getValue(Bytes.toBytes("index"), Bytes.toBytes("Column"));
+			NavigableMap<byte[], byte[]> rsMap = rs.getNoVersionMap().get(Bytes.toBytes("index"));
+			byte[] rowKey = null;
+			byte[] columnFamily = null;
+			byte[] column = null;
+			for (byte[] bt : rsMap.keySet()) {
+				byte[] value = rsMap.get(bt);
+				columnFamily = new byte[bt.length - 2];
+				for (int i = 0;i < bt.length - 2;i ++) columnFamily[i] = bt[i];
+				if (bt[bt.length - 1] == 'R') {
+					rowKey = value;
+				} else {
+					column = value;
+				}
+			}
 			Get get = new Get(rowKey);
 			get.addColumn(columnFamily, column);
 			getList.add(get);
@@ -229,7 +251,7 @@ public class HbaseLogEventReader
 		long endOfPeriodSCN = EventReaderSummary.NO_EVENTS_SCN;
 		
 		for (Result r : rs) {
-			
+			if (r.isEmpty() == true) continue; //in case some row has been deleted by user...
 			KeyValue kv = r.raw()[0];//make sure the r has only one key value.
 			long scn = kv.getTimestamp();
 			long timestamp = scn;

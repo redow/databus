@@ -169,7 +169,7 @@ public class HbaseMonitoringEventProducer implements EventProducer , Runnable {
 		if (createHTable()) {
 			do {
 				try {
-				  long maxDBScn = getMaxTxlogSCN();
+				  long maxDBScn = getMaxlogSCN();
 				  _log.info("Max DB Scn =  " + maxDBScn);
 				  _dbStats.setMaxDBScn(maxDBScn);
 					for (HbaseTriggerMonitoredSourceInfo source: _sources) {
@@ -208,7 +208,7 @@ public class HbaseMonitoringEventProducer implements EventProducer , Runnable {
 
 
 
-	 private long getMaxTxlogSCN() //read the max_scn of all hbase table
+	 private long getMaxlogSCN() //read the max_scn of all hbase table
 	  {
 		 _log.info("Querying Max_Scn Table...");
 		//make a hbase table called 'dbus4hbase_maxscn'
