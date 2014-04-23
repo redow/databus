@@ -31,6 +31,7 @@ import org.apache.avro.generic.GenericDatumWriter;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.io.BinaryEncoder;
 import org.apache.avro.io.Encoder;
+import org.apache.avro.io.EncoderFactory;
 import org.apache.log4j.Logger;
 
 import com.linkedin.databus.core.DbusEventBufferAppendable;
@@ -269,7 +270,7 @@ public class RelayEventGenerator implements EventProducer
 			{
 				// Serialize the row
 				ByteArrayOutputStream bos = new ByteArrayOutputStream();
-				Encoder encoder = new BinaryEncoder(bos);
+				Encoder encoder = EncoderFactory.get().directBinaryEncoder(bos, null);
 				GenericDatumWriter<GenericRecord> writer = new GenericDatumWriter<GenericRecord>(
 						record.getSchema());
 				writer.write(record, encoder);

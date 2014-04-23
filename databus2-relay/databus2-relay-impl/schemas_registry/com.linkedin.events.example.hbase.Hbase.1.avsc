@@ -1,0 +1,16 @@
+{
+  "name" : "Hbase_V1",
+  "doc" : "manual-generated Avro schema for hbase:table1. T_T",
+  "type" : "record",
+  "meta" : "dbFieldName=table1;",
+  "namespace" : "com.linkedin.events.example.hbase",
+  "fields" : [ {
+    "name" : "key",
+    "type" : [ "bytes", "null" ],
+    "meta" : "dbFieldName=key;dbFieldPosition=0;"
+  }, {
+    "name" : "value",
+    "type" : [ "bytes", "null" ],
+    "meta" : "dbFieldName=value;dbFieldPosition=1;"
+  } ]
+}

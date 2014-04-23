@@ -51,6 +51,7 @@ import org.apache.avro.generic.GenericDatumWriter;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.io.BinaryEncoder;
 import org.apache.avro.io.Encoder;
+import org.apache.avro.io.EncoderFactory;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 
@@ -1011,7 +1012,7 @@ public class GoldenGateEventProducer extends AbstractEventProducer
           eventsInTransactionCount++;
           // Serialize the row
           ByteArrayOutputStream bos = new ByteArrayOutputStream();
-          Encoder encoder = new BinaryEncoder(bos);
+          Encoder encoder = new EncoderFactory().get().directBinaryEncoder(bos, null);
           GenericDatumWriter<GenericRecord> writer = new GenericDatumWriter<GenericRecord>(
               record.getSchema());
           writer.write(record, encoder);
