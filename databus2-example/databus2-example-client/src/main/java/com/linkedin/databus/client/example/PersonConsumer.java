@@ -20,6 +20,10 @@ package com.linkedin.databus.client.example;
 
 
 import java.nio.ByteBuffer;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.util.Utf8;
@@ -29,6 +33,7 @@ import org.apache.log4j.Logger;
 
 import sun.awt.image.BytePackedRaster;
 
+import com.cloudera.org.apache.http.conn.params.ConnConnectionParamBean;
 import com.linkedin.databus.client.consumer.AbstractDatabusCombinedConsumer;
 import com.linkedin.databus.client.pub.ConsumerCallbackResult;
 import com.linkedin.databus.client.pub.DbusEventDecoder;
@@ -42,7 +47,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 public class PersonConsumer extends AbstractDatabusCombinedConsumer
 {
   public static final Logger LOG = Logger.getLogger(PersonConsumer.class.getName());
-
+  public static int cnt = 0;
   @Override
   public ConsumerCallbackResult onDataEvent(DbusEvent event,
                                             DbusEventDecoder eventDecoder)
@@ -61,6 +66,7 @@ public class PersonConsumer extends AbstractDatabusCombinedConsumer
                                               DbusEventDecoder eventDecoder)
   {
     GenericRecord decodedEvent = eventDecoder.getGenericRecord(event, null);
+    
     try {
 //      Utf8 firstName = (Utf8)decodedEvent.get("firstName");
 //      Utf8 lastName = (Utf8)decodedEvent.get("lastName");
@@ -115,17 +121,14 @@ public class PersonConsumer extends AbstractDatabusCombinedConsumer
     	LOG.info("Type: " + type);
     	LOG.info("TimeStamp: " + ts);
     	LOG.info("Value: " + value);
-    	System.out.println("RowKey: " + roweky);
-    	System.out.println("ColumnFamily: " + columnFamily);
-    	System.out.println("Column: " + column);
-    	System.out.println("Type: " + type);
-    	System.out.println("TimeStamp: " + ts);
-    	System.out.println("Value: " + value);
+  //  	statement.executeUpdate(sql);
+    	cnt ++;
+    	LOG.info("CNT : " + cnt);
+    	LOG.info("TIME : " + (System.currentTimeMillis() - ts));
     } catch (Exception e) {
       LOG.error("error decoding event ", e);
       return ConsumerCallbackResult.ERROR;
-    }
-
+    } 
     return ConsumerCallbackResult.SUCCESS;
   }
 

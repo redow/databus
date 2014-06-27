@@ -1,0 +1,13 @@
+scnIndexBufferInfo 48,10240000,10240000
+isFirstCheck false
+updateOnNext true
+head 0
+maxElements 640000
+tail 48
+lastScnWritten 1403507058809
+scnBufferSize 10240000
+updatedOnCurrentWindow false
+lastWrittenPosition 32
+version 1
+blockSize 1600
+individualBufferSize 512000000

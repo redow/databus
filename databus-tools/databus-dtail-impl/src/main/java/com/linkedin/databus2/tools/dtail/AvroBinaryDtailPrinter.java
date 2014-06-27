@@ -25,6 +25,7 @@ import java.util.HashMap;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericDatumWriter;
 import org.apache.avro.generic.GenericRecord;
+import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.io.BinaryEncoder;
 import org.apache.log4j.Logger;
 
@@ -68,7 +69,8 @@ public class AvroBinaryDtailPrinter extends GenericRecordDtailPrinter
       BinaryEncoder binEnc = _binEncoders.get(r.getSchema());
       if (null == binEnc)
       {
-        binEnc = new BinaryEncoder(_out);
+    	  binEnc = EncoderFactory.get().binaryEncoder(_out,null);
+        //binEnc = new BinaryEncoder(_out);
         _binEncoders.put(r.getSchema(), binEnc);
       }
 

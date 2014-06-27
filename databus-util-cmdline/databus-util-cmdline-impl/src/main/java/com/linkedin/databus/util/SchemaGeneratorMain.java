@@ -29,7 +29,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Map;
 
-import org.apache.avro.specific.SpecificCompiler;
+import org.apache.avro.compiler.specific.SpecificCompiler;
 
 /**
  * This tools is replaced by interactive schema generator tool, check InteractiveSchemaGenerator class for more details.

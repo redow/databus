@@ -2,6 +2,7 @@
  * $Id: RelayFactory.java 272015 2011-05-21 03:03:57Z cbotev $
  */
 package com.linkedin.databus2.relay;
+
 /*
  *
  * Copyright 2013 LinkedIn Corp. All rights reserved
@@ -19,8 +20,7 @@ package com.linkedin.databus2.relay;
  * specific language governing permissions and limitations
  * under the License.
  *
-*/
-
+ */
 
 import java.lang.management.ManagementFactory;
 import java.sql.SQLException;
@@ -47,6 +47,9 @@ import com.linkedin.databus2.producers.db.EventFactory;
 import com.linkedin.databus2.producers.db.HbaseEventFactory;
 import com.linkedin.databus2.producers.db.HbaseEventProducer;
 import com.linkedin.databus2.producers.db.HbaseTriggerMonitoredSourceInfo;
+import com.linkedin.databus2.producers.db.HbaseWALEventProducer;
+import com.linkedin.databus2.producers.db.HbaseWALEventReader;
+import com.linkedin.databus2.producers.db.HbaseWALMonitoredSouceInfo;
 import com.linkedin.databus2.producers.db.OracleTriggerMonitoredSourceInfo;
 import com.linkedin.databus2.producers.db.OracleAvroGenericEventFactory;
 import com.linkedin.databus2.producers.db.OracleEventProducer;
@@ -59,136 +62,250 @@ import com.linkedin.databus2.schemas.SchemaRegistryService;
  * @author Jemiah Westerman<jwesterman@linkedin.com>
  * @version $Revision: 272015 $
  */
-public class HbaseEventProducerFactory
-{
-  private final Logger _log = Logger.getLogger(getClass());
+public class HbaseEventProducerFactory {
+	private final Logger _log = Logger.getLogger(getClass());
 
-  public EventProducer buildEventProducer(PhysicalSourceStaticConfig physicalSourceConfig,
-                                 SchemaRegistryService schemaRegistryService,
-                                 DbusEventBufferAppendable dbusEventBuffer,
-                                 MBeanServer mbeanServer,
-                                 DbusEventsStatisticsCollector dbusEventsStatisticsCollector,
-                                 MaxSCNReaderWriter _maxScnReaderWriter
-                                 )
-  throws DatabusException, EventCreationException, UnsupportedKeyException, SQLException, InvalidConfigException
-  {
+	public EventProducer buildWALEventProducer(
+			PhysicalSourceStaticConfig physicalSourceConfig,
+			SchemaRegistryService schemaRegistryService,
+			DbusEventBufferAppendable dbusEventBuffer, MBeanServer mbeanServer,
+			DbusEventsStatisticsCollector dbusEventsStatisticsCollector,
+			MaxSCNReaderWriter _maxScnReaderWriter) throws DatabusException,
+			EventCreationException, UnsupportedKeyException, SQLException,
+			InvalidConfigException {
 
-	  _log.info("HbaseEventProducerFactory is starting...");
-    // Parse each one of the logical sources
-    List<HbaseTriggerMonitoredSourceInfo> sources = new ArrayList<HbaseTriggerMonitoredSourceInfo>();
-    for(LogicalSourceStaticConfig sourceConfig : physicalSourceConfig.getSources())
-    {
-    	HbaseTriggerMonitoredSourceInfo source = buildHbaseMonitoredSourceInfo(sourceConfig, physicalSourceConfig, schemaRegistryService);
-      sources.add(source);
-    }
+		_log.info("HbaseWALEventProducerFactory is starting...");
+		// Parse each one of the logical sources
+		List<HbaseWALMonitoredSouceInfo> sources = new ArrayList<HbaseWALMonitoredSouceInfo>();
+		for (LogicalSourceStaticConfig sourceConfig : physicalSourceConfig
+				.getSources()) {
+			HbaseWALMonitoredSouceInfo source = buildHbaseWALMonitoredSouceInfo(
+					sourceConfig, physicalSourceConfig, schemaRegistryService);
+			sources.add(source);
+		}
 
-    // Create the event producer
-    EventProducer eventProducer = new HbaseEventProducer(sources,
-                                                          dbusEventBuffer,
-                                                          true,
-                                                          dbusEventsStatisticsCollector,
-                                                          _maxScnReaderWriter,
-                                                          physicalSourceConfig,
-                                                          ManagementFactory.getPlatformMBeanServer());
+		// Create the event producer
+		EventProducer eventProducer = new HbaseWALEventProducer(sources,
+				dbusEventBuffer, true, dbusEventsStatisticsCollector,
+				_maxScnReaderWriter, physicalSourceConfig,
+				ManagementFactory.getPlatformMBeanServer());
 
-    _log.info("Created HbaseEventProducer for config:  " + physicalSourceConfig);
-    return eventProducer;
-  }
-
-  protected HbaseEventFactory createEventFactory(
-		                                                      LogicalSourceStaticConfig sourceConfig, PhysicalSourceStaticConfig pConfig,
-          													  String eventSchema, PartitionFunction partitionFunction)
-      throws EventCreationException, UnsupportedKeyException
-  {
-	  return new HbaseEventFactory(sourceConfig.getId(), (short)pConfig.getId(),
-              eventSchema, partitionFunction,pConfig.getReplBitSetter());
-  }
-
-  public HbaseTriggerMonitoredSourceInfo buildHbaseMonitoredSourceInfo( //build Class HbaseMonitoredSourceInfo for each table...
-      LogicalSourceStaticConfig sourceConfig, PhysicalSourceStaticConfig pConfig, SchemaRegistryService schemaRegistryService)
-      throws DatabusException, EventCreationException, UnsupportedKeyException,
-             InvalidConfigException
-  {
-    String schema = null;
-	try {
-		schema = schemaRegistryService.fetchLatestSchemaBySourceName(sourceConfig.getName());
-	} catch (NoSuchSchemaException e) {
-	      throw new InvalidConfigException("Unable to load the schema for source (" + sourceConfig.getName() + ").");
+		_log.info("Created HbaseEventProducer for config:  "
+				+ physicalSourceConfig);
+		return eventProducer;
 	}
 
-    if(schema == null)
-    {
-      throw new InvalidConfigException("Unable to load the schema for source (" + sourceConfig.getName() + ").");
-    }
+	public EventProducer buildEventProducer(
+			PhysicalSourceStaticConfig physicalSourceConfig,
+			SchemaRegistryService schemaRegistryService,
+			DbusEventBufferAppendable dbusEventBuffer, MBeanServer mbeanServer,
+			DbusEventsStatisticsCollector dbusEventsStatisticsCollector,
+			MaxSCNReaderWriter _maxScnReaderWriter) throws DatabusException,
+			EventCreationException, UnsupportedKeyException, SQLException,
+			InvalidConfigException {
 
-    _log.info("Loading schema for source id " + sourceConfig.getId() + ": " + schema);
+		_log.info("HbaseEventProducerFactory is starting...");
+		// Parse each one of the logical sources
+		List<HbaseTriggerMonitoredSourceInfo> sources = new ArrayList<HbaseTriggerMonitoredSourceInfo>();
+		for (LogicalSourceStaticConfig sourceConfig : physicalSourceConfig
+				.getSources()) {
+			HbaseTriggerMonitoredSourceInfo source = buildHbaseMonitoredSourceInfo(
+					sourceConfig, physicalSourceConfig, schemaRegistryService);
+			sources.add(source);
+		}
 
-    //   -->hbase:172.20.1.1:9000/table/cf1,cf2,cf3,cf4
-    
-    String uri = sourceConfig.getUri();
-    _log.info("Got Hbase Uri:" + uri);
-    uri = uri.substring(6,uri.length());
-    String eventTable = null;
-    String hbaseZkquorum = null;
-    String hbaseZkPort = null;
-    ArrayList<String> columnFamily = new ArrayList<String>();
-    int idxColon = uri.indexOf(':');
-    int idxSlashFirst = uri.indexOf('/');
-    int idxSlashLast = uri.lastIndexOf('/');
-    
-    eventTable = uri.substring(idxSlashFirst + 1,idxSlashLast);
-    String colunmnFamilyList = uri.substring(idxSlashLast + 1);
-    String[] colunmnFamilyArray = colunmnFamilyList.split(",");
-    for (String sz : colunmnFamilyArray) {
-    	columnFamily.add(sz);
-    }
-    hbaseZkquorum = uri.substring(0, idxColon);
-    hbaseZkPort = uri.substring(idxColon + 1,idxSlashFirst);
-    
+		// Create the event producer
+		EventProducer eventProducer = new HbaseEventProducer(sources,
+				dbusEventBuffer, true, dbusEventsStatisticsCollector,
+				_maxScnReaderWriter, physicalSourceConfig,
+				ManagementFactory.getPlatformMBeanServer());
 
-    PartitionFunction partitionFunction = buildPartitionFunction(sourceConfig);
-    EventFactory factory = createEventFactory( sourceConfig, pConfig,
-                                              schema, partitionFunction);
+		_log.info("Created HbaseEventProducer for config:  "
+				+ physicalSourceConfig);
+		return eventProducer;
+	}
 
-    EventSourceStatistics statisticsBean = new EventSourceStatistics(sourceConfig.getName());
+	protected HbaseEventFactory createEventFactory(
+			LogicalSourceStaticConfig sourceConfig,
+			PhysicalSourceStaticConfig pConfig, String eventSchema,
+			PartitionFunction partitionFunction) throws EventCreationException,
+			UnsupportedKeyException {
+		return new HbaseEventFactory(sourceConfig.getId(),
+				(short) pConfig.getId(), eventSchema, partitionFunction,
+				pConfig.getReplBitSetter());
+	}
+	public HbaseWALMonitoredSouceInfo buildHbaseWALMonitoredSouceInfo(
+			// build Class HbaseWALMonitoredSouceInfo for each table...
+			LogicalSourceStaticConfig sourceConfig,
+			PhysicalSourceStaticConfig pConfig,
+			SchemaRegistryService schemaRegistryService)
+			throws DatabusException, EventCreationException,
+			UnsupportedKeyException, InvalidConfigException {
+		String schema = null;
+		try {
+			schema = schemaRegistryService
+					.fetchLatestSchemaBySourceName(sourceConfig.getName());
+		} catch (NoSuchSchemaException e) {
+			throw new InvalidConfigException(
+					"Unable to load the schema for source ("
+							+ sourceConfig.getName() + ").");
+		}
 
-    
-    //short sourceId, String sourceName, String eventTable,
-	//String hbaseZkquorum,String hbaseZkPort,EventFactory factory, EventSourceStatistics statisticsBean,
-    //boolean skipInfinityScn)
+		if (schema == null) {
+			throw new InvalidConfigException(
+					"Unable to load the schema for source ("
+							+ sourceConfig.getName() + ").");
+		}
 
-    HbaseTriggerMonitoredSourceInfo sourceInfo = new HbaseTriggerMonitoredSourceInfo(sourceConfig.getId(),
-                                                             sourceConfig.getName(),eventTable,
-                                                             hbaseZkquorum, hbaseZkPort ,columnFamily,factory,
-                                                             statisticsBean,
-                                                             sourceConfig.isSkipInfinityScn());
-    return sourceInfo;
-  }
+		_log.info("Loading schema for source id " + sourceConfig.getId() + ": "
+				+ schema);
 
-  public PartitionFunction buildPartitionFunction(LogicalSourceStaticConfig sourceConfig)
-  throws InvalidConfigException
-  {
-    String partitionFunction = sourceConfig.getPartitionFunction();
-    if(partitionFunction.startsWith("constant:"))
-    {
-      try
-      {
-        String numberPart = partitionFunction.substring("constant:".length()).trim();
-        short constantPartitionNumber = Short.valueOf(numberPart);
-        return new ConstantPartitionFunction(constantPartitionNumber);
-      }
-      catch(Exception ex)
-      {
-        // Could be a NumberFormatException, IndexOutOfBoundsException or other exception when trying to parse the partition number.
-        throw new InvalidConfigException("Invalid partition configuration (" + partitionFunction + "). " +
-        		"Could not parse the constant partition number.");
-      }
-    }
-    else
-    {
-      throw new InvalidConfigException("Invalid partition configuration (" + partitionFunction + ").");
-    }
-  }
+		// -->hbaseWAL:172.20.1.1:9000/table/cf1,cf2,cf3,cf4&172.20.1.1:8020/hbase/.logs
+		// -->hbase:
 
+		String uri = sourceConfig.getUri();
+		_log.info("Got HbaseWAL Uri:" + uri);
+		uri = uri.substring(9, uri.length());
+		
+		String hdfsIp = null;
+		String hdfsPort = null;
+		String WALPath = null;
+		
+		int splitIdx = uri.indexOf('&');
+		String extraString = uri.substring(splitIdx + 1,uri.length());
+		
+		hdfsIp = extraString.substring(0,extraString.indexOf(':'));
+		hdfsPort = extraString.substring(extraString.indexOf(':') + 1,extraString.indexOf('/'));
+		WALPath = extraString.substring(extraString.indexOf('/'),extraString.length());
+		
+		
+		uri = uri.substring(0,splitIdx);
+		String eventTable = null;
+		String hbaseZkquorum = null;
+		String hbaseZkPort = null;
+		ArrayList<String> columnFamily = new ArrayList<String>();
+		int idxColon = uri.indexOf(':');
+		int idxSlashFirst = uri.indexOf('/');
+		int idxSlashLast = uri.lastIndexOf('/');
+
+		eventTable = uri.substring(idxSlashFirst + 1, idxSlashLast);
+		String colunmnFamilyList = uri.substring(idxSlashLast + 1);
+		String[] colunmnFamilyArray = colunmnFamilyList.split(",");
+		for (String sz : colunmnFamilyArray) {
+			columnFamily.add(sz);
+		}
+		hbaseZkquorum = uri.substring(0, idxColon);
+		hbaseZkPort = uri.substring(idxColon + 1, idxSlashFirst);
+
+		PartitionFunction partitionFunction = buildPartitionFunction(sourceConfig);
+		EventFactory factory = createEventFactory(sourceConfig, pConfig,
+				schema, partitionFunction);
+
+		EventSourceStatistics statisticsBean = new EventSourceStatistics(
+				sourceConfig.getName());
+
+		// short sourceId, String sourceName, String eventTable,
+		// String hbaseZkquorum,String hbaseZkPort,EventFactory factory,
+		// EventSourceStatistics statisticsBean,
+		// boolean skipInfinityScn)
+
+		HbaseWALMonitoredSouceInfo sourceInfo = new HbaseWALMonitoredSouceInfo(
+				sourceConfig.getId(), sourceConfig.getName(), eventTable,
+				hbaseZkquorum, hbaseZkPort, hdfsIp,hdfsPort,WALPath,columnFamily, factory,
+				statisticsBean, sourceConfig.isSkipInfinityScn());
+		return sourceInfo;
+	}
+	public HbaseTriggerMonitoredSourceInfo buildHbaseMonitoredSourceInfo(
+			// build Class HbaseMonitoredSourceInfo for each table...
+			LogicalSourceStaticConfig sourceConfig,
+			PhysicalSourceStaticConfig pConfig,
+			SchemaRegistryService schemaRegistryService)
+			throws DatabusException, EventCreationException,
+			UnsupportedKeyException, InvalidConfigException {
+		String schema = null;
+		try {
+			schema = schemaRegistryService
+					.fetchLatestSchemaBySourceName(sourceConfig.getName());
+		} catch (NoSuchSchemaException e) {
+			throw new InvalidConfigException(
+					"Unable to load the schema for source ("
+							+ sourceConfig.getName() + ").");
+		}
+
+		if (schema == null) {
+			throw new InvalidConfigException(
+					"Unable to load the schema for source ("
+							+ sourceConfig.getName() + ").");
+		}
+
+		_log.info("Loading schema for source id " + sourceConfig.getId() + ": "
+				+ schema);
+
+		// -->hbase:172.20.1.1:9000/table/cf1,cf2,cf3,cf4
+
+		String uri = sourceConfig.getUri();
+		_log.info("Got Hbase Uri:" + uri);
+		uri = uri.substring(6, uri.length());
+		String eventTable = null;
+		String hbaseZkquorum = null;
+		String hbaseZkPort = null;
+		ArrayList<String> columnFamily = new ArrayList<String>();
+		int idxColon = uri.indexOf(':');
+		int idxSlashFirst = uri.indexOf('/');
+		int idxSlashLast = uri.lastIndexOf('/');
+
+		eventTable = uri.substring(idxSlashFirst + 1, idxSlashLast);
+		String colunmnFamilyList = uri.substring(idxSlashLast + 1);
+		String[] colunmnFamilyArray = colunmnFamilyList.split(",");
+		for (String sz : colunmnFamilyArray) {
+			columnFamily.add(sz);
+		}
+		hbaseZkquorum = uri.substring(0, idxColon);
+		hbaseZkPort = uri.substring(idxColon + 1, idxSlashFirst);
+
+		PartitionFunction partitionFunction = buildPartitionFunction(sourceConfig);
+		EventFactory factory = createEventFactory(sourceConfig, pConfig,
+				schema, partitionFunction);
+
+		EventSourceStatistics statisticsBean = new EventSourceStatistics(
+				sourceConfig.getName());
+
+		// short sourceId, String sourceName, String eventTable,
+		// String hbaseZkquorum,String hbaseZkPort,EventFactory factory,
+		// EventSourceStatistics statisticsBean,
+		// boolean skipInfinityScn)
+
+		HbaseTriggerMonitoredSourceInfo sourceInfo = new HbaseTriggerMonitoredSourceInfo(
+				sourceConfig.getId(), sourceConfig.getName(), eventTable,
+				hbaseZkquorum, hbaseZkPort, columnFamily, factory,
+				statisticsBean, sourceConfig.isSkipInfinityScn());
+		return sourceInfo;
+	}
+
+	public PartitionFunction buildPartitionFunction(
+			LogicalSourceStaticConfig sourceConfig)
+			throws InvalidConfigException {
+		String partitionFunction = sourceConfig.getPartitionFunction();
+		if (partitionFunction.startsWith("constant:")) {
+			try {
+				String numberPart = partitionFunction.substring(
+						"constant:".length()).trim();
+				short constantPartitionNumber = Short.valueOf(numberPart);
+				return new ConstantPartitionFunction(constantPartitionNumber);
+			} catch (Exception ex) {
+				// Could be a NumberFormatException, IndexOutOfBoundsException
+				// or other exception when trying to parse the partition number.
+				throw new InvalidConfigException(
+						"Invalid partition configuration ("
+								+ partitionFunction
+								+ "). "
+								+ "Could not parse the constant partition number.");
+			}
+		} else {
+			throw new InvalidConfigException(
+					"Invalid partition configuration (" + partitionFunction
+							+ ").");
+		}
+	}
 
 }

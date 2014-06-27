@@ -33,7 +33,7 @@ import jline.ConsoleReader;
 import jline.SimpleCompletor;
 
 import org.apache.avro.Schema;
-import org.apache.avro.specific.SpecificCompiler;
+import org.apache.avro.compiler.specific.SpecificCompiler;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.map.ObjectMapper;

@@ -1,0 +1,236 @@
+2014-06-24 20:29:05,416 [Test worker] (INFO) {testAppendBigEventsHeadScnOverlap} starting
+2014-06-24 20:29:05,416 [Test worker] (INFO) {RelayEventTraceOption} Relay event trace option: none
+2014-06-24 20:29:05,416 [Test worker] (INFO) {RelayEventTraceOption} Relay event trace filename: databus_relay_event_trace
+2014-06-24 20:29:05,416 [Test worker] (INFO) {RelayEventTraceOption} Relay event trace file append only: false
+2014-06-24 20:29:05,416 [Test worker] (INFO) {RelayEventTraceOption} Relay event trace need file suffix: false
+2014-06-24 20:29:05,416 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,416 [Test worker] (INFO) {BufferPositionParser} Individual Buffer Size: 1f4
+2014-06-24 20:29:05,416 [Test worker] (INFO) {BufferPositionParser} Num Buffers: 3
+2014-06-24 20:29:05,416 [Test worker] (INFO) {BufferPositionParser} Offset Length: 9
+2014-06-24 20:29:05,416 [Test worker] (INFO) {BufferPositionParser} buffer position for the EventBuffer: BufferPositionParser [_offsetMask=511, _indexMask=1536, _genIdMask=9223372036854773760, _offsetShift=0, _indexShift=9, _genIdShift=11, _totalBufferSize=1500]
+2014-06-24 20:29:05,416 [Test worker] (INFO) {ScnIndex} ScnIndex configured with: maxElements = 6
+2014-06-24 20:29:05,417 [Test worker] (INFO) {testAppendBigEventsHeadScnOverlap} append initial events
+2014-06-24 20:29:05,417 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,417 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,417 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,417 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,417 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,417 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,417 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,417 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,417 [Test worker] (INFO) {testAppendBigEventsHeadScnOverlap} Head:222:[GenId=0;Index=0;Offset=222], Tail:2109:[GenId=1;Index=0;Offset=61]
+2014-06-24 20:29:05,417 [Test worker] (INFO) {testAppendBigEventsHeadScnOverlap} Num buffers: 3
+2014-06-24 20:29:05,417 [Test worker] (INFO) {testAppendBigEventsHeadScnOverlap} Buffer: [java.nio.HeapByteBuffer[pos=61 lim=483 cap=500], java.nio.HeapByteBuffer[pos=483 lim=483 cap=500], java.nio.HeapByteBuffer[pos=161 lim=161 cap=200]]
+2014-06-24 20:29:05,417 [Test worker] (INFO) {testAppendBigEventsHeadScnOverlap} append windows with one small and one big event
+2014-06-24 20:29:05,417 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,417 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,417 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,417 [Test worker] (INFO) {testAppendBigEventsHeadScnOverlap} Head:1085:[GenId=0;Index=2;Offset=61], Tail:3021:[GenId=1;Index=1;Offset=461]
+2014-06-24 20:29:05,418 [Test worker] (INFO) {testAppendBigEventsHeadScnOverlap} Num buffers: 3
+2014-06-24 20:29:05,418 [Test worker] (INFO) {testAppendBigEventsHeadScnOverlap} Buffer: [java.nio.HeapByteBuffer[pos=322 lim=322 cap=500], java.nio.HeapByteBuffer[pos=461 lim=500 cap=500], java.nio.HeapByteBuffer[pos=161 lim=161 cap=200]]
+2014-06-24 20:29:05,418 [Test worker] (INFO) {testAppendBigEventsHeadScnOverlap} finished
+2014-06-24 20:29:05,418 [Test worker] (INFO) {testAppendEventWhenLimitLessThanCapacity} starting
+2014-06-24 20:29:05,418 [Test worker] (INFO) {RelayEventTraceOption} Relay event trace option: none
+2014-06-24 20:29:05,418 [Test worker] (INFO) {RelayEventTraceOption} Relay event trace filename: databus_relay_event_trace
+2014-06-24 20:29:05,418 [Test worker] (INFO) {RelayEventTraceOption} Relay event trace file append only: false
+2014-06-24 20:29:05,418 [Test worker] (INFO) {RelayEventTraceOption} Relay event trace need file suffix: false
+2014-06-24 20:29:05,418 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,418 [Test worker] (INFO) {BufferPositionParser} Individual Buffer Size: 1f4
+2014-06-24 20:29:05,419 [Test worker] (INFO) {BufferPositionParser} Num Buffers: 3
+2014-06-24 20:29:05,419 [Test worker] (INFO) {BufferPositionParser} Offset Length: 9
+2014-06-24 20:29:05,419 [Test worker] (INFO) {BufferPositionParser} buffer position for the EventBuffer: BufferPositionParser [_offsetMask=511, _indexMask=1536, _genIdMask=9223372036854773760, _offsetShift=0, _indexShift=9, _genIdShift=11, _totalBufferSize=1500]
+2014-06-24 20:29:05,419 [Test worker] (INFO) {ScnIndex} ScnIndex configured with: maxElements = 6
+2014-06-24 20:29:05,419 [Test worker] (INFO) {testAppendEventWhenLimitLessThanCapacity} append initial events
+2014-06-24 20:29:05,419 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,419 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,419 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,419 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,419 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,419 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,419 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,419 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,419 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,419 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,419 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,419 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,420 [Test worker] (INFO) {testAppendEventWhenLimitLessThanCapacity} Head:895:[GenId=0;Index=1;Offset=383],Tail:2782:[GenId=1;Index=1;Offset=222]
+2014-06-24 20:29:05,420 [Test worker] (INFO) {testAppendEventWhenLimitLessThanCapacity} Num buffers :3
+2014-06-24 20:29:05,420 [Test worker] (INFO) {testAppendEventWhenLimitLessThanCapacity} Buffer :[java.nio.HeapByteBuffer[pos=483 lim=483 cap=500], java.nio.HeapByteBuffer[pos=222 lim=483 cap=500], java.nio.HeapByteBuffer[pos=161 lim=161 cap=200]]
+2014-06-24 20:29:05,420 [Test worker] (INFO) {testAppendEventWhenLimitLessThanCapacity} append event to stretch beyond limit but less than capacity
+2014-06-24 20:29:05,420 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,420 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,420 [Test worker] (INFO) {testAppendEventWhenLimitLessThanCapacity} Head:2109:[GenId=1;Index=0;Offset=61],Tail:3133:[GenId=1;Index=2;Offset=61]
+2014-06-24 20:29:05,420 [Test worker] (INFO) {testAppendEventWhenLimitLessThanCapacity} Num buffers :3
+2014-06-24 20:29:05,420 [Test worker] (INFO) {testAppendEventWhenLimitLessThanCapacity} Buffer :[java.nio.HeapByteBuffer[pos=483 lim=483 cap=500], java.nio.HeapByteBuffer[pos=494 lim=494 cap=500], java.nio.HeapByteBuffer[pos=61 lim=200 cap=200]]
+2014-06-24 20:29:05,420 [Test worker] (INFO) {testAppendEventWhenLimitLessThanCapacity} finished
+2014-06-24 20:29:05,420 [Test worker] (INFO) {testAppendEventsWithCloseInMiddle} starting
+2014-06-24 20:29:05,453 [Test worker] (INFO) {RelayEventTraceOption} Relay event trace option: none
+2014-06-24 20:29:05,459 [Test worker] (INFO) {RelayEventTraceOption} Relay event trace filename: databus_relay_event_trace
+2014-06-24 20:29:05,459 [Test worker] (INFO) {RelayEventTraceOption} Relay event trace file append only: false
+2014-06-24 20:29:05,459 [Test worker] (INFO) {RelayEventTraceOption} Relay event trace need file suffix: false
+2014-06-24 20:29:05,461 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,462 [Test worker] (INFO) {BufferPositionParser} Individual Buffer Size: 1f4
+2014-06-24 20:29:05,465 [Test worker] (INFO) {BufferPositionParser} Num Buffers: 3
+2014-06-24 20:29:05,465 [Test worker] (INFO) {BufferPositionParser} Offset Length: 9
+2014-06-24 20:29:05,469 [Test worker] (INFO) {BufferPositionParser} buffer position for the EventBuffer: BufferPositionParser [_offsetMask=511, _indexMask=1536, _genIdMask=9223372036854773760, _offsetShift=0, _indexShift=9, _genIdShift=11, _totalBufferSize=1500]
+2014-06-24 20:29:05,470 [Test worker] (WARN) {ScnIndex} restoreMMappedBuffer is set to true, but file /tmp/tmp_mmapDir/session_1403612945461/scnIndexMetaFile does't exist
+2014-06-24 20:29:05,471 [Test worker] (INFO) {ScnIndex} ScnIndex configured with: maxElements = 6
+2014-06-24 20:29:05,471 [Test worker] (INFO) {testAppendEventsWithCloseInMiddle} append initial events
+2014-06-24 20:29:05,472 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,472 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,478 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,479 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,479 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,479 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,480 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,480 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,480 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,481 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,481 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,482 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,482 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,516 [Test worker] (INFO) {ScnIndex} about to save scnindex state into /tmp/tmp_mmapDir/session_1403612945461/scnIndexMetaFile
+2014-06-24 20:29:05,516 [Test worker] (INFO) {testAppendEventsWithCloseInMiddle} Got e: 
+java.lang.AssertionError
+	at com.linkedin.databus.core.DbusEventBuffer.appendEvent(DbusEventBuffer.java:1751)
+	at com.linkedin.databus.core.DbusEventBuffer.appendEvent(DbusEventBuffer.java:1740)
+	at com.linkedin.databus.core.DbusEventBuffer.appendEvent(DbusEventBuffer.java:1724)
+	at com.linkedin.databus.core.TestDbusEventBufferAppendEvents.addOneEvent(TestDbusEventBufferAppendEvents.java:385)
+	at com.linkedin.databus.core.TestDbusEventBufferAppendEvents.testAppendEventsWithCloseInMiddle(TestDbusEventBufferAppendEvents.java:271)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:80)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:701)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:893)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1218)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:127)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:111)
+	at org.testng.TestRunner.privateRun(TestRunner.java:758)
+	at org.testng.TestRunner.run(TestRunner.java:613)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:334)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:329)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:291)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:240)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:53)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:87)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1170)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1095)
+	at org.testng.TestNG.run(TestNG.java:1007)
+	at org.gradle.api.internal.tasks.testing.testng.TestNGTestClassProcessor.stop(TestNGTestClassProcessor.java:126)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.stop(SuiteTestClassProcessor.java:58)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at org.gradle.messaging.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:35)
+	at org.gradle.messaging.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.messaging.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:32)
+	at org.gradle.messaging.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:93)
+	at sun.proxy.$Proxy2.stop(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.stop(TestWorker.java:113)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at org.gradle.messaging.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:35)
+	at org.gradle.messaging.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.messaging.remote.internal.TypeCastDispatch.dispatch(TypeCastDispatch.java:30)
+	at org.gradle.messaging.remote.internal.WorkerProtocol.handleIncoming(WorkerProtocol.java:53)
+	at org.gradle.messaging.remote.internal.WorkerProtocol.handleIncoming(WorkerProtocol.java:31)
+	at org.gradle.messaging.remote.internal.ProtocolStack$ProtocolStage.handleIncoming(ProtocolStack.java:167)
+	at org.gradle.messaging.remote.internal.ProtocolStack$BottomStage.handleIncoming(ProtocolStack.java:277)
+	at org.gradle.messaging.remote.internal.ProtocolStack$BottomConnection$1.run(ProtocolStack.java:299)
+	at org.gradle.messaging.remote.internal.ProtocolStack$ExecuteRunnable.dispatch(ProtocolStack.java:120)
+	at org.gradle.messaging.remote.internal.ProtocolStack$ExecuteRunnable.dispatch(ProtocolStack.java:116)
+	at org.gradle.messaging.dispatch.AsyncDispatch.dispatchMessages(AsyncDispatch.java:132)
+	at org.gradle.messaging.dispatch.AsyncDispatch.access$000(AsyncDispatch.java:33)
+	at org.gradle.messaging.dispatch.AsyncDispatch$1.run(AsyncDispatch.java:72)
+	at org.gradle.internal.concurrent.DefaultExecutorFactory$StoppableExecutorImpl$1.run(DefaultExecutorFactory.java:66)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1146)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:679)
+2014-06-24 20:29:05,526 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,529 [Test worker] (INFO) {BufferPositionParser} Individual Buffer Size: 1f4
+2014-06-24 20:29:05,531 [Test worker] (INFO) {BufferPositionParser} Num Buffers: 3
+2014-06-24 20:29:05,531 [Test worker] (INFO) {BufferPositionParser} Offset Length: 9
+2014-06-24 20:29:05,532 [Test worker] (INFO) {BufferPositionParser} buffer position for the EventBuffer: BufferPositionParser [_offsetMask=511, _indexMask=1536, _genIdMask=9223372036854773760, _offsetShift=0, _indexShift=9, _genIdShift=11, _totalBufferSize=1500]
+2014-06-24 20:29:05,534 [Test worker] (INFO) {ScnIndex} loading metaInfoFile /tmp/tmp_mmapDir/session_1403612945461/scnIndexMetaFile
+2014-06-24 20:29:05,535 [Test worker] (INFO) {ScnIndex} ScnIndex configured with: maxElements = 6
+2014-06-24 20:29:05,548 [Test worker] (INFO) {ScnIndex} about to save scnindex state into /tmp/tmp_mmapDir/session_1403612945461/scnIndexMetaFile
+2014-06-24 20:29:05,554 [Test worker] (INFO) {testAppendEventsWithCloseInMiddle} Got e2: 
+com.linkedin.databus.core.DatabusRuntimeException: refusing to endEvents, because the buffer is closed
+	at com.linkedin.databus.core.DbusEventBuffer.endEvents(DbusEventBuffer.java:1992)
+	at com.linkedin.databus.core.DbusEventBuffer.endEvents(DbusEventBuffer.java:2183)
+	at com.linkedin.databus.core.DbusEventBuffer.endEvents(DbusEventBuffer.java:2172)
+	at com.linkedin.databus.core.TestDbusEventBufferAppendEvents.testAppendEventsWithCloseInMiddle(TestDbusEventBufferAppendEvents.java:296)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:80)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:701)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:893)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1218)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:127)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:111)
+	at org.testng.TestRunner.privateRun(TestRunner.java:758)
+	at org.testng.TestRunner.run(TestRunner.java:613)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:334)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:329)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:291)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:240)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:53)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:87)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1170)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1095)
+	at org.testng.TestNG.run(TestNG.java:1007)
+	at org.gradle.api.internal.tasks.testing.testng.TestNGTestClassProcessor.stop(TestNGTestClassProcessor.java:126)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.stop(SuiteTestClassProcessor.java:58)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at org.gradle.messaging.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:35)
+	at org.gradle.messaging.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.messaging.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:32)
+	at org.gradle.messaging.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:93)
+	at sun.proxy.$Proxy2.stop(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.stop(TestWorker.java:113)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at org.gradle.messaging.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:35)
+	at org.gradle.messaging.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.messaging.remote.internal.TypeCastDispatch.dispatch(TypeCastDispatch.java:30)
+	at org.gradle.messaging.remote.internal.WorkerProtocol.handleIncoming(WorkerProtocol.java:53)
+	at org.gradle.messaging.remote.internal.WorkerProtocol.handleIncoming(WorkerProtocol.java:31)
+	at org.gradle.messaging.remote.internal.ProtocolStack$ProtocolStage.handleIncoming(ProtocolStack.java:167)
+	at org.gradle.messaging.remote.internal.ProtocolStack$BottomStage.handleIncoming(ProtocolStack.java:277)
+	at org.gradle.messaging.remote.internal.ProtocolStack$BottomConnection$1.run(ProtocolStack.java:299)
+	at org.gradle.messaging.remote.internal.ProtocolStack$ExecuteRunnable.dispatch(ProtocolStack.java:120)
+	at org.gradle.messaging.remote.internal.ProtocolStack$ExecuteRunnable.dispatch(ProtocolStack.java:116)
+	at org.gradle.messaging.dispatch.AsyncDispatch.dispatchMessages(AsyncDispatch.java:132)
+	at org.gradle.messaging.dispatch.AsyncDispatch.access$000(AsyncDispatch.java:33)
+	at org.gradle.messaging.dispatch.AsyncDispatch$1.run(AsyncDispatch.java:72)
+	at org.gradle.internal.concurrent.DefaultExecutorFactory$StoppableExecutorImpl$1.run(DefaultExecutorFactory.java:66)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1146)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:679)
+2014-06-24 20:29:05,575 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,576 [Test worker] (INFO) {BufferPositionParser} Individual Buffer Size: 1f4
+2014-06-24 20:29:05,577 [Test worker] (INFO) {BufferPositionParser} Num Buffers: 3
+2014-06-24 20:29:05,577 [Test worker] (INFO) {BufferPositionParser} Offset Length: 9
+2014-06-24 20:29:05,577 [Test worker] (INFO) {BufferPositionParser} buffer position for the EventBuffer: BufferPositionParser [_offsetMask=511, _indexMask=1536, _genIdMask=9223372036854773760, _offsetShift=0, _indexShift=9, _genIdShift=11, _totalBufferSize=1500]
+2014-06-24 20:29:05,577 [Test worker] (INFO) {ScnIndex} loading metaInfoFile /tmp/tmp_mmapDir/session_1403612945461/scnIndexMetaFile
+2014-06-24 20:29:05,578 [Test worker] (INFO) {ScnIndex} ScnIndex configured with: maxElements = 6
+2014-06-24 20:29:05,598 [Test worker] (INFO) {ScnIndex} about to save scnindex state into /tmp/tmp_mmapDir/session_1403612945461/scnIndexMetaFile
+2014-06-24 20:29:05,606 [Test worker] (INFO) {DbusEventV1Factory} BIG_ENDIAN
+2014-06-24 20:29:05,607 [Test worker] (INFO) {BufferPositionParser} Individual Buffer Size: 1f4
+2014-06-24 20:29:05,608 [Test worker] (INFO) {BufferPositionParser} Num Buffers: 3
+2014-06-24 20:29:05,614 [Test worker] (INFO) {BufferPositionParser} Offset Length: 9
+2014-06-24 20:29:05,615 [Test worker] (INFO) {BufferPositionParser} buffer position for the EventBuffer: BufferPositionParser [_offsetMask=511, _indexMask=1536, _genIdMask=9223372036854773760, _offsetShift=0, _indexShift=9, _genIdShift=11, _totalBufferSize=1500]
+2014-06-24 20:29:05,616 [Test worker] (INFO) {ScnIndex} loading metaInfoFile /tmp/tmp_mmapDir/session_1403612945461/scnIndexMetaFile
+2014-06-24 20:29:05,623 [Test worker] (INFO) {ScnIndex} ScnIndex configured with: maxElements = 6

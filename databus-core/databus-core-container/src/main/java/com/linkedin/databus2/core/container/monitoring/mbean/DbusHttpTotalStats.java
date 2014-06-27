@@ -28,6 +28,7 @@ import java.util.concurrent.locks.Lock;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
+import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.io.JsonEncoder;
 import org.apache.avro.specific.SpecificDatumWriter;
 import org.apache.log4j.Logger;
@@ -307,7 +308,8 @@ public class DbusHttpTotalStats extends AbstractMonitoringMBean<DbusHttpTotalSta
   @Override
   public JsonEncoder createJsonEncoder(OutputStream out) throws IOException
   {
-    return new JsonEncoder(_event.getSchema(), out);
+	  return EncoderFactory.get().jsonEncoder(_event.getSchema(), out);
+    //return new JsonEncoder(_event.getSchema(), out);
   }
 
   @Override

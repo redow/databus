@@ -10,7 +10,9 @@ dependencies {
   compile externalDependency.log4j
   compile externalDependency.json
   compile externalDependency.hbase
-  compile externalDependency.hadoop
+  compile externalDependency.hadoopCore
+  compile externalDependency.hadoopCommon
+  compile externalDependency.hadoopHdfs
   
   testCompile project(':databus-core:databus-core-fwk-test')
   testCompile externalDependency.testng

@@ -25,6 +25,7 @@ import java.util.HashMap;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericDatumWriter;
 import org.apache.avro.generic.GenericRecord;
+import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.io.JsonEncoder;
 import org.apache.log4j.Logger;
 
@@ -68,7 +69,8 @@ public class AvroJsonDtailPrinter extends GenericRecordDtailPrinter
       JsonEncoder jsonEnc = _jsonEncoders.get(r.getSchema());
       if (null == jsonEnc)
       {
-        jsonEnc = new JsonEncoder(r.getSchema(), _out);
+    	jsonEnc = EncoderFactory.get().jsonEncoder(r.getSchema(), _out);  
+        //jsonEnc = new JsonEncoder(r.getSchema(), _out);
         _jsonEncoders.put(r.getSchema(), jsonEnc);
       }
 

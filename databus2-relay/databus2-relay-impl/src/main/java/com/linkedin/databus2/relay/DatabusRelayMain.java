@@ -2,6 +2,7 @@
  * $Id: DatabusRelayMain.java 261967 2011-04-19 02:54:35Z cbotev $
  */
 package com.linkedin.databus2.relay;
+
 /*
  *
  * Copyright 2013 LinkedIn Corp. All rights reserved
@@ -19,8 +20,7 @@ package com.linkedin.databus2.relay;
  * specific language governing permissions and limitations
  * under the License.
  *
-*/
-
+ */
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -52,6 +52,7 @@ import com.linkedin.databus2.producers.RelayEventProducer;
 import com.linkedin.databus2.producers.RelayEventProducersRegistry;
 import com.linkedin.databus2.producers.db.HbaseEventFactory;
 import com.linkedin.databus2.producers.db.HbaseEventProducer;
+import com.linkedin.databus2.producers.db.HbaseWALEventProducer;
 import com.linkedin.databus2.producers.db.OracleEventProducer;
 import com.linkedin.databus2.relay.config.PhysicalSourceStaticConfig;
 import com.linkedin.databus2.relay.config.ReplicationBitSetterStaticConfig.SourceType;
@@ -62,11 +63,11 @@ public class DatabusRelayMain extends HttpRelay {
 			.getName());
 	public static final String DB_RELAY_CONFIG_FILE_OPT_NAME = "db_relay_config";
 
-
-    private final RelayEventProducersRegistry _producersRegistry = RelayEventProducersRegistry.getInstance();
+	private final RelayEventProducersRegistry _producersRegistry = RelayEventProducersRegistry
+			.getInstance();
 	MultiServerSequenceNumberHandler _maxScnReaderWriters;
 	protected Map<PhysicalPartition, EventProducer> _producers;
-	Map<PhysicalPartition,EventProducer> _monitoringProducers;
+	Map<PhysicalPartition, EventProducer> _monitoringProducers;
 	ControlSourceEventsRequestProcessor _csEventRequestProcessor;
 	private boolean _dbPullerStart = false;
 
@@ -91,7 +92,8 @@ public class DatabusRelayMain extends HttpRelay {
 				handlerFactory);
 		_producers = new HashMap<PhysicalPartition, EventProducer>(
 				_pConfigs.size());
-		_monitoringProducers = new HashMap<PhysicalPartition, EventProducer>(_pConfigs.size());
+		_monitoringProducers = new HashMap<PhysicalPartition, EventProducer>(
+				_pConfigs.size());
 		_dbPullerStart = false;
 	}
 
@@ -152,7 +154,7 @@ public class DatabusRelayMain extends HttpRelay {
 		 * _inBoundStatsCollectors.addStatsCollector(statsCollectorName, new
 		 * DbusEventsStatisticsCollector(getContainerStaticConfig().getId(),
 		 * statsCollectorName+".inbound", true, false, getMbeanServer()));
-		 *
+		 * 
 		 * _outBoundStatsCollectors.addStatsCollector(statsCollectorName, new
 		 * DbusEventsStatisticsCollector(getContainerStaticConfig().getId(),
 		 * statsCollectorName+".outbound", true, false, getMbeanServer()));
@@ -160,22 +162,30 @@ public class DatabusRelayMain extends HttpRelay {
 
 		// Create the event producer
 		String uri = pConfig.getUri();
-    if(uri == null)
-      throw new DatabusException("Uri is required to start the relay");
-    uri = uri.trim();
+		if (uri == null)
+			throw new DatabusException("Uri is required to start the relay");
+		uri = uri.trim();
 		EventProducer producer = null;
-		if (uri.startsWith("hbase:")) {
+		if (uri.startsWith("hbaseWAL:")) {
+			LOG.info("Got a uri start with hbaseWAL...");
+			producer = new HbaseEventProducerFactory().buildWALEventProducer(
+					pConfig, schemaRegistryService, dbusEventBuffer,
+					getMbeanServer(), _inBoundStatsCollectors
+							.getStatsCollector(statsCollectorName),
+					maxScnReaderWriters);
+		}
+		else if (uri.startsWith("hbase:")) {
 			LOG.info("Got a uri start with hbase...");
 			producer = new HbaseEventProducerFactory().buildEventProducer(
 					pConfig, schemaRegistryService, dbusEventBuffer,
 					getMbeanServer(), _inBoundStatsCollectors
 							.getStatsCollector(statsCollectorName),
 					maxScnReaderWriters);
-		}
-		else if (uri.startsWith("jdbc:")) {
-		  SourceType sourceType = pConfig.getReplBitSetter().getSourceType();
-          if (SourceType.TOKEN.equals(sourceType))
-            throw new DatabusException("Token Source-type for Replication bit setter config cannot be set for trigger-based Databus relay !!");
+		} else if (uri.startsWith("jdbc:")) {
+			SourceType sourceType = pConfig.getReplBitSetter().getSourceType();
+			if (SourceType.TOKEN.equals(sourceType))
+				throw new DatabusException(
+						"Token Source-type for Replication bit setter config cannot be set for trigger-based Databus relay !!");
 
 			// if a buffer for this partiton exists - we are overwri
 			producer = new OracleEventProducerFactory().buildEventProducer(
@@ -184,37 +194,36 @@ public class DatabusRelayMain extends HttpRelay {
 							.getStatsCollector(statsCollectorName),
 					maxScnReaderWriters);
 		} else if (uri.startsWith("mock")) {
-		  // Get all relevant pConfig attributes
-		  //TODO add real instantiation
-		  EventProducerServiceProvider mockProvider = _producersRegistry.getEventProducerServiceProvider("mock");
-		  if (null == mockProvider)
-		  {
-		    throw new DatabusRuntimeException("relay event producer not available: " + "mock");
-		  }
-		  producer = mockProvider.createProducer(pConfig, schemaRegistryService,
-		                                         dbusEventBuffer,
-		                                         _inBoundStatsCollectors
-		                                                 .getStatsCollector(statsCollectorName),
-		                                         maxScnReaderWriters);
-		} else if (uri.startsWith("gg:")){
-      producer = new GoldenGateEventProducer(pConfig,
-                                             schemaRegistryService,
-                                             dbusEventBuffer,
-                                             _inBoundStatsCollectors
-                                                 .getStatsCollector(statsCollectorName),
-                                             maxScnReaderWriters);
+			// Get all relevant pConfig attributes
+			// TODO add real instantiation
+			EventProducerServiceProvider mockProvider = _producersRegistry
+					.getEventProducerServiceProvider("mock");
+			if (null == mockProvider) {
+				throw new DatabusRuntimeException(
+						"relay event producer not available: " + "mock");
+			}
+			producer = mockProvider.createProducer(pConfig,
+					schemaRegistryService, dbusEventBuffer,
+					_inBoundStatsCollectors
+							.getStatsCollector(statsCollectorName),
+					maxScnReaderWriters);
+		} else if (uri.startsWith("gg:")) {
+			producer = new GoldenGateEventProducer(pConfig,
+					schemaRegistryService, dbusEventBuffer,
+					_inBoundStatsCollectors
+							.getStatsCollector(statsCollectorName),
+					maxScnReaderWriters);
 
-
-    } else
-     {
-			// Get all relevant pConfig attributes and initialize the nettyThreadPool objects
-			RelayEventProducer.DatabusClientNettyThreadPools nettyThreadPools =
-						new RelayEventProducer.DatabusClientNettyThreadPools(0,getNetworkTimeoutTimer(),getBossExecutorService(),
-																				getIoExecutorService(), getHttpChannelGroup());
+		} else {
+			// Get all relevant pConfig attributes and initialize the
+			// nettyThreadPool objects
+			RelayEventProducer.DatabusClientNettyThreadPools nettyThreadPools = new RelayEventProducer.DatabusClientNettyThreadPools(
+					0, getNetworkTimeoutTimer(), getBossExecutorService(),
+					getIoExecutorService(), getHttpChannelGroup());
 			producer = new RelayEventProducer(pConfig, dbusEventBuffer,
 					_inBoundStatsCollectors
 							.getStatsCollector(statsCollectorName),
-					maxScnReaderWriters,nettyThreadPools);
+					maxScnReaderWriters, nettyThreadPools);
 		}
 
 		// if a buffer for this partiton exists - we are overwriting it.
@@ -234,10 +243,17 @@ public class DatabusRelayMain extends HttpRelay {
 			HbaseMonitoringEventProducer monitoringProducer = new HbaseMonitoringEventProducer(
 					"dbMonitor." + pPartition.toSimpleString(),
 					pConfig.getName(), pConfig.getUri(),
-					((HbaseEventProducer)producer).getMonitoredSourceInfos(),
+					((HbaseEventProducer) producer).getMonitoredSourceInfos(),
 					getMbeanServer());
 			_monitoringProducers.put(pPartition, monitoringProducer);
 			plist.add(monitoringProducer);
+		} else if (producer instanceof HbaseWALEventProducer) {
+			HbaseWALMonitoringEventProducer monitoringProducer = new HbaseWALMonitoringEventProducer(
+					"dbMonitor." + pPartition.toSimpleString(),
+					pConfig.getName(), pConfig.getUri(),
+					((HbaseWALEventProducer) producer).getMonitoredSourceInfos(),
+					getMbeanServer());
+			_monitoringProducers.put(pPartition, monitoringProducer);
 		}
 
 		if (_csEventRequestProcessor == null)
@@ -265,37 +281,37 @@ public class DatabusRelayMain extends HttpRelay {
 	}
 
 	/** get maxScnReaderWriters given a physical source **/
-	public MaxSCNReaderWriter getMaxSCNReaderWriter(PhysicalSourceStaticConfig pConfig)
-	{
-		try
-		{
+	public MaxSCNReaderWriter getMaxSCNReaderWriter(
+			PhysicalSourceStaticConfig pConfig) {
+		try {
 			MaxSCNReaderWriter maxScnReaderWriters = _maxScnReaderWriters
-				.getOrCreateHandler(pConfig.getPhysicalPartition());
+					.getOrCreateHandler(pConfig.getPhysicalPartition());
 			return maxScnReaderWriters;
-		}
-		catch (DatabusException e)
-		{
-			LOG.warn("Cannot get maxScnReaderWriter for " + pConfig.getPhysicalPartition() +  " error=" + e);
+		} catch (DatabusException e) {
+			LOG.warn("Cannot get maxScnReaderWriter for "
+					+ pConfig.getPhysicalPartition() + " error=" + e);
 		}
 		return null;
 	}
 
-  public static void main(String[] args) throws Exception
-  {
-    Cli cli = new Cli();
-    cli.processCommandLineArgs(args);
-    cli.parseRelayConfig();
-    // Process the startup properties and load configuration
-    PhysicalSourceStaticConfig[] pStaticConfigs = cli.getPhysicalSourceStaticConfigs();
-    HttpRelay.StaticConfig staticConfig = cli.getRelayConfigBuilder().build();
+	public static void main(String[] args) throws Exception {
+		Cli cli = new Cli();
+		cli.processCommandLineArgs(args);
+		cli.parseRelayConfig();
+		// Process the startup properties and load configuration
+		PhysicalSourceStaticConfig[] pStaticConfigs = cli
+				.getPhysicalSourceStaticConfigs();
+		HttpRelay.StaticConfig staticConfig = cli.getRelayConfigBuilder()
+				.build();
 
-    // Create and initialize the server instance
-    DatabusRelayMain serverContainer = new DatabusRelayMain(staticConfig, pStaticConfigs);
+		// Create and initialize the server instance
+		DatabusRelayMain serverContainer = new DatabusRelayMain(staticConfig,
+				pStaticConfigs);
 
-    serverContainer.initProducers();
-    serverContainer.registerShutdownHook();
-    serverContainer.startAndBlock();
-  }
+		serverContainer.initProducers();
+		serverContainer.registerShutdownHook();
+		serverContainer.startAndBlock();
+	}
 
 	@Override
 	protected void doStart() {
@@ -353,7 +369,6 @@ public class DatabusRelayMain extends HttpRelay {
 		}
 	}
 
-
 	@Override
 	protected void doShutdown() {
 		LOG.warn("Shutting down Relay!");
@@ -371,22 +386,40 @@ public class DatabusRelayMain extends HttpRelay {
 				}
 				LOG.info("EventProducer is shutdown!");
 			}
-
-			HbaseMonitoringEventProducer monitoringProducer = (HbaseMonitoringEventProducer)_monitoringProducers
-					.get(pPartition);
-			if (monitoringProducer != null) {
-				if (monitoringProducer.isRunning()) {
-					monitoringProducer.shutdown();
-				}
-
-				while (monitoringProducer.isRunning()
-						|| monitoringProducer.isPaused()) {
-					try {
-						monitoringProducer.waitForShutdown();
-					} catch (InterruptedException ie) {
+			if (_monitoringProducers instanceof HbaseMonitoringEventProducer) {
+				HbaseMonitoringEventProducer monitoringProducer = (HbaseMonitoringEventProducer) _monitoringProducers
+						.get(pPartition);
+				if (monitoringProducer != null) {
+					if (monitoringProducer.isRunning()) {
+						monitoringProducer.shutdown();
 					}
+	
+					while (monitoringProducer.isRunning()
+							|| monitoringProducer.isPaused()) {
+						try {
+							monitoringProducer.waitForShutdown();
+						} catch (InterruptedException ie) {
+						}
+					}
+					monitoringProducer.unregisterMBeans();
 				}
-				monitoringProducer.unregisterMBeans();
+			} else if (_monitoringProducers instanceof HbaseWALMonitoringEventProducer) {
+				HbaseWALMonitoringEventProducer monitoringProducer = (HbaseWALMonitoringEventProducer) _monitoringProducers
+						.get(pPartition);
+				if (monitoringProducer != null) {
+					if (monitoringProducer.isRunning()) {
+						monitoringProducer.shutdown();
+					}
+	
+					while (monitoringProducer.isRunning()
+							|| monitoringProducer.isPaused()) {
+						try {
+							monitoringProducer.waitForShutdown();
+						} catch (InterruptedException ie) {
+						}
+					}
+					monitoringProducer.unregisterMBeans();
+				}
 			}
 		}
 		super.doShutdown();

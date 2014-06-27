@@ -20,7 +20,8 @@ File getEnvironmentScript()
 apply from: environmentScript
 
 externalDependency = [
-    'avro': 'org.apache.avro:avro:1.4.0',
+    'avroCompiler': 'org.apache.avro:avro-compiler:1.7.4',
+    'avro': 'org.apache.avro:avro:1.7.4',
     'commonsBeanutils': 'commons-beanutils:commons-beanutils:1.7.0',
     'commonsCli': 'commons-cli:commons-cli:1.2',
     'commonsCodec': 'commons-codec:commons-codec:1.6',
@@ -57,9 +58,10 @@ externalDependency = [
     'espressoCommonImpl': 'com.linkedin.espresso:espresso-common-impl:0.8.1602',
     'espressoStoreImpl': 'com.linkedin.espresso:espresso-store-impl:0.8.1602',
     'helixCore': 'org.apache.helix:helix-core:0.6.1.3',
-    'hadoop': 'org.apache.hadoop:hadoop-core:2.0.0-mr1-cdh4.6.0',
+    'hadoopCore': 'org.apache.hadoop:hadoop-core:2.0.0-mr1-cdh4.6.0',
+    'hadoopHdfs': 'org.apache.hadoop:hadoop-hdfs:2.0.0-cdh4.6.0',
     'hbase': 'org.apache.hbase:hbase:0.94.15-cdh4.6.0',
-    'hadoop': 'org.apache.hadoop:hadoop-common:2.0.0-cdh4.6.0'
+    'hadoopCommon': 'org.apache.hadoop:hadoop-common:2.0.0-cdh4.6.0',
 ];
 
 if (System.getProperty('open_source') != null) {

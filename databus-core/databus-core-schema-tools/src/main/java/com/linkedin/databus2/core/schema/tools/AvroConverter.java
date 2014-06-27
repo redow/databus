@@ -36,6 +36,7 @@ import org.apache.avro.io.BinaryEncoder;
 import org.apache.avro.io.Decoder;
 import org.apache.avro.io.DecoderFactory;
 import org.apache.avro.io.Encoder;
+import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.io.JsonDecoder;
 import org.apache.avro.io.JsonEncoder;
 import org.codehaus.jackson.JsonFactory;
@@ -71,7 +72,8 @@ public class AvroConverter
     Decoder inputDecoder = (_inputFormat == AvroFormat.BINARY) ?
         DecoderFactory.defaultFactory().createBinaryDecoder(in, null) :
         (AvroFormat.JSON == _inputFormat) ?
-            new JsonDecoder(_inputSchema, in) :
+        	DecoderFactory.get().jsonDecoder(_inputSchema, in) :
+            //new JsonDecoder(_inputSchema, in) :
             null;
 
     ArrayList<GenericRecord> result = new ArrayList<GenericRecord>();
@@ -98,7 +100,8 @@ public class AvroConverter
             String line;
             while (null != (line = lineIn.readLine()))
             {
-              inputDecoder =  new JsonDecoder(_inputSchema, line);
+              inputDecoder = DecoderFactory.get().jsonDecoder(_inputSchema, line);
+              //inputDecoder =  new JsonDecoder(_inputSchema, line);
               GenericRecord r = genericReader.read(null, inputDecoder);
               result.add(r);
               break;
@@ -130,8 +133,10 @@ public class AvroConverter
 
     List<GenericRecord> result = convert(in);
     Encoder outputEncoder = (AvroFormat.BINARY == _outputFormat) ?
-        new BinaryEncoder(out) :
-        new JsonEncoder(_outputSchema, jsonGenerator);
+    	EncoderFactory.get().binaryEncoder(out, null) :
+   //     new BinaryEncoder(out) :
+    	EncoderFactory.get().jsonEncoder(_outputSchema, jsonGenerator);
+   //     new JsonEncoder(_outputSchema, jsonGenerator);
 
     GenericDatumWriter<GenericRecord> genericWriter = new GenericDatumWriter<GenericRecord>(_outputSchema);
     for (GenericRecord r: result)

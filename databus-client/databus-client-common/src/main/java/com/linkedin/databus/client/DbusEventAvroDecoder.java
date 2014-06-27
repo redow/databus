@@ -36,6 +36,7 @@ import org.apache.avro.io.BinaryDecoder;
 import org.apache.avro.io.DatumReader;
 import org.apache.avro.io.DatumWriter;
 import org.apache.avro.io.DecoderFactory;
+import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.io.JsonEncoder;
 import org.apache.avro.specific.SpecificDatumReader;
 import org.apache.avro.specific.SpecificRecord;
@@ -277,7 +278,8 @@ public class DbusEventAvroDecoder implements DbusEventDecoder
       g.writeString(e.getOpcode().toString());
 
       g.writeFieldName(VALUE_FIELD_NAME);
-      writer.write(datum, new JsonEncoder(schema, g));
+      writer.write(datum, EncoderFactory.get().jsonEncoder(schema, g));
+  //  writer.write(datum, new JsonEncoder(schema, g));
       g.writeEndObject();
       g.writeEndObject();
       try {

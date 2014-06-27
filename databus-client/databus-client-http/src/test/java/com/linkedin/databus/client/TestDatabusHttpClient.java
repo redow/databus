@@ -48,6 +48,7 @@ import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericDatumWriter;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.io.BinaryEncoder;
+import org.apache.avro.io.EncoderFactory;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonGenerationException;
@@ -2933,7 +2934,7 @@ public class TestDatabusHttpClient
       String s = RngUtils.randomString(rng.nextInt(100));
       r.put("s", s);
       ByteArrayOutputStream baos = new ByteArrayOutputStream(s.length() + 100);
-      BinaryEncoder out = new BinaryEncoder(baos);
+      BinaryEncoder out = EncoderFactory.get().binaryEncoder(baos,null);
       try
       {
         writer.write(r, out);

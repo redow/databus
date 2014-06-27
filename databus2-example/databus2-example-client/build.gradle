@@ -7,6 +7,9 @@ dependencies {
 
   compile externalDependency.commonsCli
   compile externalDependency.log4j
-  compile externalDependency.hadoop
+  compile externalDependency.mysqlConnectorJava
+  compile externalDependency.hadoopCore
+  compile externalDependency.hadoopCommon
+  compile externalDependency.hadoopHdfs
   compile externalDependency.hbase
 }

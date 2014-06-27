@@ -1,4 +1,5 @@
 package com.linkedin.databus.relay.example;
+
 /*
  *
  * Copyright 2013 LinkedIn Corp. All rights reserved
@@ -16,8 +17,7 @@ package com.linkedin.databus.relay.example;
  * specific language governing permissions and limitations
  * under the License.
  *
-*/
-
+ */
 
 import java.io.IOException;
 import java.util.Map;
@@ -34,48 +34,50 @@ import com.linkedin.databus2.relay.DatabusRelayMain;
 import com.linkedin.databus2.relay.config.PhysicalSourceStaticConfig;
 
 public class PersonRelayServer extends DatabusRelayMain {
-  public static final String MODULE = PersonRelayServer.class.getName();
-  public static final Logger LOG = Logger.getLogger(MODULE);
-  static final String FULLY_QUALIFIED_PERSON_EVENT_NAME = "com.linkedin.events.example.person.Person";
-  static final int PERSON_SRC_ID = 40;
+	public static final String MODULE = PersonRelayServer.class.getName();
+	public static final Logger LOG = Logger.getLogger(MODULE);
+	static final String FULLY_QUALIFIED_PERSON_EVENT_NAME = "com.linkedin.events.example.person.Person";
+	static final int PERSON_SRC_ID = 40;
 
-  MultiServerSequenceNumberHandler _maxScnReaderWriters;
-  protected Map<PhysicalPartition, EventProducer> _producers;
+	MultiServerSequenceNumberHandler _maxScnReaderWriters;
+	protected Map<PhysicalPartition, EventProducer> _producers;
 
-  public PersonRelayServer() throws IOException, InvalidConfigException, DatabusException
-  {
-    this(new HttpRelay.Config(), null);
-  }
+	public PersonRelayServer() throws IOException, InvalidConfigException,
+			DatabusException {
+		this(new HttpRelay.Config(), null);
+	}
 
-  public PersonRelayServer(HttpRelay.Config config, PhysicalSourceStaticConfig [] pConfigs)
-  throws IOException, InvalidConfigException, DatabusException
-  {
-    this(config.build(), pConfigs);
-  }
+	public PersonRelayServer(HttpRelay.Config config,
+			PhysicalSourceStaticConfig[] pConfigs) throws IOException,
+			InvalidConfigException, DatabusException {
+		this(config.build(), pConfigs);
+	}
 
-  public PersonRelayServer(HttpRelay.StaticConfig config, PhysicalSourceStaticConfig [] pConfigs)
-  throws IOException, InvalidConfigException, DatabusException
-  {
-    super(config, pConfigs);
+	public PersonRelayServer(HttpRelay.StaticConfig config,
+			PhysicalSourceStaticConfig[] pConfigs) throws IOException,
+			InvalidConfigException, DatabusException {
+		super(config, pConfigs);
 
-  }
+	}
 
-  public static void main(String[] args) throws Exception
-  {
-  		Cli cli = new Cli();
-	     cli.setDefaultPhysicalSrcConfigFiles("conf/sources-hbase.json");
-	     cli.processCommandLineArgs(args);
-	     cli.parseRelayConfig();
-	     // Process the startup properties and load configuration
-	     PhysicalSourceStaticConfig[] pStaticConfigs = cli.getPhysicalSourceStaticConfigs();
-	     HttpRelay.StaticConfig staticConfig = cli.getRelayConfigBuilder().build();
-	
-	     // Create and initialize the server instance
-	     DatabusRelayMain serverContainer = new DatabusRelayMain(staticConfig, pStaticConfigs);
-	
-	     serverContainer.initProducers();
-	     serverContainer.registerShutdownHook();
-	     serverContainer.startAndBlock();
-  }
+	public static void main(String[] args) throws Exception {
+		Cli cli = new Cli();
+		cli.setDefaultPhysicalSrcConfigFiles("conf/sources-hbase.json");
+		cli.processCommandLineArgs(args);
+		cli.parseRelayConfig();
+		// Process the startup properties and load configuration
+		PhysicalSourceStaticConfig[] pStaticConfigs = cli
+				.getPhysicalSourceStaticConfigs();
+		HttpRelay.StaticConfig staticConfig = cli.getRelayConfigBuilder()
+				.build();
+
+		// Create and initialize the server instance
+		DatabusRelayMain serverContainer = new DatabusRelayMain(staticConfig,
+				pStaticConfigs);
+
+		serverContainer.initProducers();
+		serverContainer.registerShutdownHook();
+		serverContainer.startAndBlock();
+	}
 
 }

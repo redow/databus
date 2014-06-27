@@ -29,6 +29,7 @@ import org.apache.avro.Schema.Field;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericDatumWriter;
 import org.apache.avro.generic.GenericRecord;
+import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.io.JsonEncoder;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -169,7 +170,8 @@ public class DataGenerator {
 
   private static void printAvroJson(GenericRecord record, OutputStream outs) throws IOException
   {
-    JsonEncoder jsonEnc = new JsonEncoder(record.getSchema(), outs);
+	JsonEncoder jsonEnc = EncoderFactory.get().jsonEncoder(record.getSchema(), outs);
+   // JsonEncoder jsonEnc = new JsonEncoder(record.getSchema(), outs);
     GenericDatumWriter<GenericRecord> datumWriter = new GenericDatumWriter<GenericRecord>(record.getSchema());
     datumWriter.write(record, jsonEnc);
     jsonEnc.flush();
