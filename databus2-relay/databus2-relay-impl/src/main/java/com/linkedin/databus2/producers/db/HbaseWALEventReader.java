@@ -78,7 +78,8 @@ public class HbaseWALEventReader implements SourceDBEventReader {
 
 	private static final String MAX_SCN_TABLE = "dbus4hbase_scn";
 	private static final String MAX_SCN_ROWKEY = "1";
-
+	private Map<String, Map<String, Long>> offsetMap = new HashMap<String, Map<String,Long>>();
+	
 	public HbaseWALEventReader(String name,
 			List<HbaseWALMonitoredSouceInfo> sources,
 			DbusEventBufferAppendable eventBuffer, boolean enableTracing,
@@ -156,6 +157,9 @@ public class HbaseWALEventReader implements SourceDBEventReader {
 		getMaxSCN(maxSCNMap);
 		long startTS = System.currentTimeMillis();
 		for (String identString : WALPathSet) {
+			if (offsetMap.containsKey(identString) == false) {
+				offsetMap.put(identString, new HashMap<String, Long>());
+			}
 			fillKeyValueMap(keyValueMap, sinceSCN, identString.substring(0,
 					identString.indexOf("$")),
 					identString.substring(identString.indexOf("$") + 1,
@@ -313,6 +317,8 @@ public class HbaseWALEventReader implements SourceDBEventReader {
 		cfg.set("fs.file.impl",
 				org.apache.hadoop.fs.LocalFileSystem.class.getName());
 		long maxSCN = -1;
+		Map<String,Long> offset = offsetMap.get(hdfsIp + "$" + hdfsPort + "$" + WALPath);
+		List<String> existsPaths = new ArrayList<String>();
 		try {
 			fs = FileSystem.get(
 					URI.create("hdfs://" + hdfsIp + ':' + hdfsPort + WALPath),
@@ -324,31 +330,49 @@ public class HbaseWALEventReader implements SourceDBEventReader {
 						.toString()));
 				Path[] subListPath = FileUtil.stat2Paths(subFileStatus);
 				for (Path p : subListPath) {
+					existsPaths.add(p.toString());
 					HLog.Reader reader = HLog.getReader(fs, p, cfg);
-					HLog.Entry entry = null;
-					while ((entry = reader.next()) != null) {
-						WALEdit wa = entry.getEdit();
-						HLogKey wk = entry.getKey();
-						String tableName = Bytes.toString(wk.getTablename());
-						if (keyValueMap.containsKey(tableName) == false)
-							continue;
-						List<KeyValue> kvList = wa.getKeyValues();
-						Map<String, List<KeyValue>> map = keyValueMap.get(tableName);
-						for (KeyValue kv : kvList) {
-							if (kv.getTimestamp() < sinceSCN)
-								continue;
-							if (kv.getTimestamp() > maxSCNMap.get(tableName)) {
-								maxSCNMap.put(tableName, kv.getTimestamp());
-								if (maxSCN < kv.getTimestamp()) {
-									maxSCN = kv.getTimestamp();
-								}
-							}
-							if (map.containsKey(Bytes.toString(kv.getFamily())) == false)
-								continue;
-							map.get(Bytes.toString(kv.getFamily())).add(kv);
+					try {
+						HLog.Entry entry = null;
+						if (offset.containsKey(p.toString())) {
+							reader.seek(offset.get(p.toString()));
 						}
+						while ((entry = reader.next()) != null) {
+							WALEdit wa = entry.getEdit();
+							HLogKey wk = entry.getKey();
+							String tableName = Bytes.toString(wk.getTablename());
+							if (keyValueMap.containsKey(tableName) == false)
+								continue;
+							List<KeyValue> kvList = wa.getKeyValues();
+							Map<String, List<KeyValue>> map = keyValueMap.get(tableName);
+							for (KeyValue kv : kvList) {
+								if (kv.getTimestamp() < sinceSCN)
+									continue;
+								if (kv.getTimestamp() > maxSCNMap.get(tableName)) {
+									maxSCNMap.put(tableName, kv.getTimestamp());
+									if (maxSCN < kv.getTimestamp()) {
+										maxSCN = kv.getTimestamp();
+									}
+								}
+								if (map.containsKey(Bytes.toString(kv.getFamily())) == false)
+									continue;
+								map.get(Bytes.toString(kv.getFamily())).add(kv);
+							}
+						}
+						if (offset.containsKey(p.toString()) == false) {
+							offset.put(p.toString(), -1L);
+						}
+						offset.put(p.toString(), reader.getPosition());
+					} finally {
+						if (reader != null) reader.close();
 					}
 				}
+			}
+			long before = offset.size();
+			offset.keySet().retainAll(existsPaths);
+			long after = offset.size();
+			if (before != after) {
+				_log.info("OffsetMap size before and after operation of retainAll : " + before + " vs " + after);
 			}
 		} catch (IOException e) {
 			_eventsLog.error("", e);
