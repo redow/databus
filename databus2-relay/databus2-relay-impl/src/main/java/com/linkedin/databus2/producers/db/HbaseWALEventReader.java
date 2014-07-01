@@ -431,6 +431,7 @@ public class HbaseWALEventReader implements SourceDBEventReader {
 						Bytes.toBytes(scn));
 			}
 		}
+		if (put.isEmpty()) return;
 		try {
 			hTable.put(put);
 		} catch (IOException e) {
